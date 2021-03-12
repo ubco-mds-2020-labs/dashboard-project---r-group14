@@ -64,6 +64,30 @@ return (htmlDiv(
 )))
 }
 
+generate_control_card_tab2 <- function(){
+  
+return(htmlDiv(
+  id="control-card2",
+  list(
+    htmlP(
+      "Please select any combination of categories, mechanics, publishers."
+                     
+    ),
+    htmlBr(),
+    htmlP("Please select categories:"),
+    # dropdown for categories goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
+    htmlBr(),
+    htmlP("Please select mechanics:"),
+    # dropdown for mechanics goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
+    htmlBr(),
+    htmlP("Please select publishers:"),
+    # dropdown for mechanics goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
+    htmlBr(),
+    htmlBr()
+  
+)))}
+
+
 # lower description for tab 1
 lower_description<- function(){
   
@@ -231,6 +255,37 @@ fifth_card = dbcCard(
   
   ))
 
+# card 6 containing the control card for tab 2
+sixth_card = dbcCard(dbcCardBody(list(generate_control_card_tab2())))
+
+seventh_card = dbcCard(
+  dbcCardBody(list(
+                   
+                   
+                   
+                   
+                   
+                   
+    
+      htmlDiv("Plot for top 10 games goes here 
+      
+      
+      
+      
+      "
+        # top n games chart goes here
+  )
+)))
+
+# card 8 containing the data table for the top n games for tab 2
+eight_card = dbcCard(
+  dbcCardBody(
+    list(
+      htmlH5("Top 10 Games Facts Table:")
+      # data table for top 10 games goes here, comes from wrangling
+    )
+  )
+)
 
 # card 9 for data set description tab 1
 ninth_card = dbcCard(
@@ -253,6 +308,23 @@ ninth_card = dbcCard(
   )
 )
 
+# tab styling features for layout
+tabs_styles = list("height"= "44px")
+tab_style = list(
+  "borderBottom"="1px solid #d6d6d6",
+  "padding"= "6px",
+  "fontWeight"= "bold",
+  "display"="All"
+)
+
+tab_selected_style = list(
+  "borderTop"= "1px solid #d6d6d6",
+  "borderBottom"= "1px solid #d6d6d6",
+  "backgroundColor"= "#119DFF",
+  "color"= "white",
+  "padding"= "6px"
+)
+
 #  set up app stylesheet and server
 app <- Dash$new(external_stylesheets = dbcThemes$BOOTSTRAP)
 
@@ -268,10 +340,12 @@ app$layout(htmlDiv(list(
                   list(title())
                
          
-    )), htmlDiv(dccTabs(id="tabs_in_app", value='tabs',list(
+    )), htmlDiv(dccTabs(id="tabs_in_app", value='tab-1',list(
   
-  dccTab(label='Game Dynamics Over Time', children=list(dbcRow(list(dbcCol(first_card, width=3), dbcCol(second_card, width=9))), dbcRow(list(dbcCol(third_card, width=3),dbcCol(list(fourth_card,fifth_card), width=9))), dbcRow(dbcCol(ninth_card, width=3)))),
-  dccTab(label='Top Games')))))))
+  dccTab(label='Game Dynamics Over Time', value='tab-1',children=list(dbcRow(list(dbcCol(first_card, width=3), dbcCol(second_card, width=9))), dbcRow(list(dbcCol(third_card, width=3),dbcCol(list(fourth_card,fifth_card), width=9))), dbcRow(dbcCol(ninth_card, width=3))), style=tab_style,
+         selected_style=tab_selected_style),
+  dccTab(label='Top Games', value='tab-2',children=list(dbcRow(list(dbcCol(sixth_card, width=3), dbcCol(list(seventh_card,eight_card), width=9)))),style=tab_style,
+         selected_style=tab_selected_style)))))))
   
   
 # app callbacks
