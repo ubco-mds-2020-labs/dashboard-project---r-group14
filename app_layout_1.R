@@ -7,45 +7,20 @@ library(dashCoreComponents)
 library(dashBootstrapComponents)
 library(ggplot2)
 library(plotly)
-# library for dictionaries
-library(hash)
+
+
+# * WRANGLING - load board game data here
 
 
 
-# * WRANGLING - load board game data 
+# * WRANGLING - get dictionary for dropdowns here
 
 
 
-# *WRANGLING - get dictionary for dropdowns
 
-# fake chart for layout 
-# Load ggplot2
-p <- ggplot(msleep) +
-  aes(x = bodywt,
-      y = sleep_total) +
-  geom_point() +
-  scale_x_log10()
-
-
-
-# hash table for tab 1 sliders
-h <- hash() 
-  h[['1950']] <- 1950
-  h[['1955']] <- 1955
-  h[['1960']] <- 1960
-  h[['1965']] <- 1965
-  h[['1970']] <- 1970
-  h[['1975']] <- 1975
-  h[['1980']] <- 1980
-  h[['1985']] <- 1985
-  h[['1995']] <- 1995
-  h[['2000']] <- 2000
-  h[['2005']] <- 2005
-  h[['2010']] <- 2010
-  h[['2015']] <- 2015
   
 
-# title
+# title for entire dashboard
 title<-function(){
  
 return (htmlDiv(list(htmlH1("Board Game Trends Dashboard"))))
@@ -79,7 +54,7 @@ return (htmlDiv(
     htmlLabel("Select what you want to view:"),
     htmlBr(),
     htmlBr(),
-    #add radio button
+    # add radio button
     htmlBr(),
     htmlLabel("Select elements to view:"),
     htmlBr(),
@@ -159,7 +134,7 @@ second_card = dbcCard(
   )
 ))
 
-# card 3 containing the lower description and collapsable data set description for tab 1
+# card 3 containing the lower description and collapsible data set description for tab 1
 third_card = dbcCard(
   dbcCardBody(
     
@@ -172,72 +147,90 @@ third_card = dbcCard(
   )
 )
 
+# card 4 containing the top slider and first faceted bar chart
 fourth_card = dbcCard(
-  dbcCardBody(
+  dbcCardBody(list(
     
-      dbcRow(
+      
         
-          htmlDiv(
-            list(
+         
+            
               htmlDiv(
-                id="output-container-range-slider",
-                
-              ),
-              htmlBr(),
-              htmlBr(),
-              dccRangeSlider(
-                id="non-linear-range-slider",
-                min=1950,
-                max=2016,
-                step=1,
-                value=list(1990, 2010),
-                marks=h,
-              ),
-              htmlBr(),
-              # 1st facet chart for bottom tab 1 goes here
+                list(
               
-              htmlBr(),
-              htmlBr()
+              htmlDiv(id='output-container-range-slider'),
+              dccRangeSlider(
+                id='non-linear-range-slider',
+                min = 1950,
+                max = 2016,
+                step=1,
+                marks = list(
+                  '1950'= "1950",
+                  '1955'= "1955",
+                  '1960'= "1960",
+                  '1965'= "1965",
+                  '1970'= "1970",
+                  '1975'= "1975",
+                  '1980'= "1980",
+                  '1985'="1985",
+                  '1990'= "1990",
+                  '1995'="1995",
+                  '2000'="2000",
+                  '2005'="2005",
+                  '2010' ="2010",
+                  '2015'= "2015"
+                ),
+                value = list(1990,2010))))
+              # plot goes here 
+              
             
           )
         
-      )
+      ))
+    
+  
+
+# card 5 containing the top slider and second faceted bar chart
+fifth_card = dbcCard(
+  dbcCardBody(list(
+    
+    
+    
+    
+    
+    htmlDiv(
+      list(
+        
+        htmlDiv(id='output-container-range-slider2'),
+        dccRangeSlider(
+          id='non-linear-range-slider2',
+          min = 1950,
+          max = 2016,
+          step=1,
+          marks = list(
+            '1950'= "1950",
+            '1955'= "1955",
+            '1960'= "1960",
+            '1965'= "1965",
+            '1970'= "1970",
+            '1975'= "1975",
+            '1980'= "1980",
+            '1985'="1985",
+            '1990'= "1990",
+            '1995'="1995",
+            '2000'="2000",
+            '2005'="2005",
+            '2010' ="2010",
+            '2015'= "2015"
+          ),
+          value = list(1990,2010))))
+    # plot goes here 
+    
     
   )
-))
-
-fifth_card = dbcCard(
-  dbcCardBody(
-    
-    dbcRow(
-      
-      htmlDiv(
-        list(
-          htmlDiv(
-            id="output-container-range-slider2",
-            
-          ),
-          htmlBr(),
-          htmlBr(),
-          dccRangeSlider(
-            id="non-linear-range-slider2",
-            min=1950,
-            max=2016,
-            step=1,
-            value=list(1990, 2010),
-            marks=h,
-          ),
-          htmlBr(),
-          # 2nd facet chart for bottom tab 1 goes here
-          htmlBr(),
-          htmlBr()
-          
-        )
-        
-      )
-      
-    )
+  
   ))
+
 
 # card 9 for data set description tab 1
 ninth_card = dbcCard(
@@ -261,7 +254,7 @@ ninth_card = dbcCard(
 )
 
 #  set up app stylesheet and server
-app = Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css")
+app <- Dash$new(external_stylesheets = dbcThemes$BOOTSTRAP)
 
 # layout made up of cards
 app$layout(htmlDiv(list(
@@ -277,11 +270,63 @@ app$layout(htmlDiv(list(
          
     )), htmlDiv(dccTabs(id="tabs_in_app", value='tabs',list(
   
-  dccTab(label='Game Dynamics Over Time', children=list(htmlBr(),htmlBr(),htmlBr(),dbcRow(list(dbcCol(first_card, width=3), dbcCol(second_card, width=9))), dbcRow(list(dbcCol(third_card, width=3), dbcCol(fourth_card, width=9))), dbcRow(ninth_card))),
+  dccTab(label='Game Dynamics Over Time', children=list(dbcRow(list(dbcCol(first_card, width=3), dbcCol(second_card, width=9))), dbcRow(list(dbcCol(third_card, width=3),dbcCol(list(fourth_card,fifth_card), width=9))), dbcRow(dbcCol(ninth_card, width=3)))),
   dccTab(label='Top Games')))))))
   
   
 # app callbacks
+
+# radio button selection options to populate drop down
+
+# this will return something like [{"label": c, "value": c} for c in col_dict[col]]
+
+
+# scatter plot tab 1
+
+
+
+# stacked histogram of counts annual published counts
+
+
+# 1st facet chart
+
+
+
+# 2nd facet chart
+
+
+
+# 1st year range slider output tab 1
+
+app$callback(
+  list(output('output-container-range-slider', 'children')),
+  list(input('non-linear-range-slider', 'value')),
+  function(value) {
+    
+    value1 <- value[1]
+    value2 <- value[2]
+    string=paste("Years Selected ", value1,"to ", value2)
+    return(list(string))
+  })
+
+# 2nd year range slider output tab 1
+
+app$callback(
+  list(output('output-container-range-slider2', 'children')),
+  list(input('non-linear-range-slider2', 'value')),
+  function(value) {
+    
+    value1 <- value[1]
+    value2 <- value[2]
+    string=paste("Years Selected ", value1,"to ", value2)
+    return(list(string))
+  })
+
+
+# collapsable data set description
+
+
+
 
 
 app$run_server(debug = T) 
