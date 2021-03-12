@@ -45,6 +45,8 @@ call_boardgame_filter <- function(data, cat, mech, pub, n = NULL){
 call_boardgame_radio <- function(data, col_, list_) {
     func_df_out <- data
     return(func_df_out[call_bool_series_or(col_, list_, data),])
+    
+    ### CALL FORM GROUP
 }
 
 form_group <- function(col_, list_, data) {
@@ -66,13 +68,16 @@ form_group <- function(col_, list_, data) {
     func_df_out <- func_df_out %>% 
         mutate(group = output)
     
+    # SOME SORT OF .JOIN THING HERE, MAYBE NOT NECESSARY
+    
+    
+    
     return(func_df_out)
     
     
 }
 
 
-# ASK RYAN WHY THIS HAS LIST_TO_STRING_
 call_bool_series_or <- function(col_, list_, data){
     output <- vector(mode = 'list', length = nrow(data))
     
@@ -102,6 +107,18 @@ call_bool_series_and <- function(col_, list_, data) {
     output <- unlist(output)
     if (sum(output) == 0) {output = !output}
     return(output)
+}
+
+
+call_boardgame_top <- function(col_, year_in, year_out, data) {
+    func_df_out <- data %>%
+        filter(year_published >= year_in, year_published <= year_out) 
+    
+    func_df_out$explode_on <- strsplit(func_df_out[[col_]], ",")
+    
+
+    
+    return(func_df_out)
 }
 
 
