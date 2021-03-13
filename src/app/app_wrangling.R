@@ -4,16 +4,10 @@ library(tidyr)
 library(purrr)
 
 
-### TEMPORARY FOR TESTING
-#cat_in = c('Economic', 'Negotiation')
-#mech_in = list('Hand Management')
-#pub_in = c('')
-
-
 # calls data frame
 # fills select na values
 # creates list rom strings for mechanic, category, publisher
-call_boardgame_data <- function(){
+call_boardgame_data <- function() {
     
     # load data, this is relative to the root folder in the repository
     filename <- 'data/app_data/board_game.csv'
@@ -35,67 +29,74 @@ call_boardgame_data <- function(){
     return(boardgame_data)
 }
 
+# Filters the dataframe and returns the top n 
 call_boardgame_filter <- function(data, cat, mech, pub, n = NULL){
     func_df_out <- data
     
     # check each category
-    cat_check <- call_bool_series_and('category', cat, data)
-    mech_check <- call_bool_series_and('mechanic', mech, data)
-    publ_check <- call_bool_series_and('publisher', pub, data)
+    cat_check <- call_bool_series_and(data, 'category', cat)
+    mech_check <- call_bool_series_and(data, 'mechanic', mech)
+    publ_check <- call_bool_series_and(data, 'publisher', pub)
     
     # remove rows from df that aren't matched
     func_df_out <- func_df_out %>%
         mutate(cat_check, mech_check, publ_check) %>%
         filter(cat_check, mech_check, publ_check) %>%
-        select(-cat_check, -mech_check, -publ_check)
-    
-    # if a number is specified, return the number of entires
+        select(-cat_check, -mech_check, -publ_check) %>%
+        # sort by average rating
+        arrange(desc(average_rating))
+        
+    # return number of entries is specified by user
     if (!is.null(n)){
-        func_df_out <- func_df_out %>% 
-            arrange(desc(average_rating)) %>%
-            slice_head(n = n)
+        func_df_out <- slice_head(func_df_out, n = n)
     }
+    
     return(func_df_out)
 }
 
 
+# call from tab 1 of graph to filter data based on user selection
 call_boardgame_radio <- function(data, col_, list_) {
     func_df_out <- data
-    func_df_out <- func_df_out[call_bool_series_or(col_, list_, data),]
-    func_df_out <- form_group(col_, list_, func_df_out)    
-    fucn_df_out <- filter(func_df_out, !is.na(.data[[col_]]))
+    # subset based on user selection
+    func_df_out <- func_df_out[call_bool_series_or(data, col_, list_),]
+    # call form group to add group column 
+    func_df_out <- form_group(func_df_out, col_, list_)
+    # remove all entries that aren't part of a group
+    fucn_df_out <- filter(func_df_out, !is.na(group))
     return(fucn_df_out)
 }
 
-form_group <- function(col_, list_, data) {
-    func_df_out <- data
-    output <- vector(mode = 'list', length = nrow(data))
+
+# form groupings based on user selection from `call_boardgame_radio`
+form_group <- function(data, col_, list_) {
     
-    count <- 1
-    for (i in data[[col_]]) {
-        strings <- strsplit(i, ",")
-        unlisted_strings <- unlist(strings)
-        check <- (list_ %in% unlisted_strings)
-        
-        if (length(list_[check]) == 0) {
-            list_result = NA
-        }
-        else if (length(list_) > 1 & all(check)) {
-            list_result <- 'All Selected'
-        }
-        else {
-            list_result <- list_[check]
-        }
-        
-        output[count] <- list_result
-        count <- count + 1
-    }
-    output <- unlist(output)
+    # check if values contain the user input
+    check <- check_list(data[[col_]], list_)
     
-    func_df_out <- func_df_out %>% 
+    # assign correct value
+    output <- map(check, ~(form_group_helper(.x, {{list_}}))) %>%
+        unlist()
+    
+    # add new column to dataframe
+    func_df_out <- data %>% 
         mutate(group = output)
     
     return(func_df_out)
+}
+
+# used in map to check what should be assigned
+form_group_helper <- function(data, list_) {
+    if (length(data) == 0) {
+        return(NA)
+    }
+    else if (length(list_) > 1 & all(data)) {
+        return('All Selected')
+    }
+    else {
+        return(list_[data])
+    }
+    
 }
 
 
@@ -106,7 +107,7 @@ check_list <- function(col_data, list_) {
 
 
 # function which checks if one condition is met from requirements
-call_bool_series_or <- function(col_, list_, data){
+call_bool_series_or <- function(data, col_, list_){
     
     # check if one of the values matches the user input list
     check <- check_list(data[[col_]], list_) %>%
@@ -117,7 +118,7 @@ call_bool_series_or <- function(col_, list_, data){
 
 
 # function which checks if conditions are met for all requirements
-call_bool_series_and <- function(col_, list_, data) {
+call_bool_series_and <- function(data, col_, list_) {
     
     # check if all of the values contain the user input list
     check <- check_list(data[[col_]], list_) %>%
@@ -129,7 +130,7 @@ call_bool_series_and <- function(col_, list_, data) {
 }
 
 # return top 5 values based on the average for a given column
-call_boardgame_top <- function(col_, year_in, year_out, data) {
+call_boardgame_top <- function(data, col_, year_in, year_out) {
     func_df_out <- data %>%
         filter(year_published >= year_in, year_published <= year_out) %>%
         unnest(.data[[col_]]) %>% 
