@@ -15,8 +15,8 @@ call_boardgame_data <- function() {
 
     # convert NA value to 'Unknown' for specific columns
     repl_val <- 'Unknown'
-    # regex
-    reg_use <- ','
+    # regex RYAN TO REPLACE WITH CORRECT REGEX HERE
+    reg_use <- ","
     boardgame_data <- boardgame_data %>% 
         replace_na(list(category = repl_val, 
                         mechanic = repl_val,
@@ -55,6 +55,37 @@ call_boardgame_filter <- function(data, cat, mech, pub, n = NULL){
 }
 
 
+# helper function to check where user input matches
+# used in the `*and()` and `*or()` functions
+check_list <- function(col_data, list_) {
+    map(col_data, ~(list_ %in% unlist(.x)))
+}
+
+
+# function which checks if conditions are met for all requirements
+call_bool_series_and <- function(data, col_, list_) {
+    
+    # check if all of the values contain the user input list
+    check <- check_list(data[[col_]], list_) %>%
+        map(~all(.)) %>% unlist()
+    
+    # if there are no TRUE values in the entire list, switch all values to TRUE
+    if (sum(check) == 0) check = !check
+    return(check)
+}
+
+
+# function which checks if one condition is met from requirements
+call_bool_series_or <- function(data, col_, list_){
+    
+    # check if one of the values matches the user input list
+    check <- check_list(data[[col_]], list_) %>%
+        map(~any(.)) %>% unlist()
+    
+    return(check)
+}
+
+
 # call from tab 1 of graph to filter data based on user selection
 call_boardgame_radio <- function(data, col_, list_) {
     func_df_out <- data
@@ -65,6 +96,21 @@ call_boardgame_radio <- function(data, col_, list_) {
     # remove all entries that aren't part of a group
     fucn_df_out <- filter(func_df_out, !is.na(group))
     return(fucn_df_out)
+}
+
+
+# used in form group map call to check what should be assigned
+form_group_helper <- function(data, list_) {
+    if (length(data) == 0) {
+        return(NA)
+    }
+    else if (length(list_) > 1 & all(data)) {
+        return('All Selected')
+    }
+    else {
+        return(list_[data])
+    }
+    
 }
 
 
@@ -85,49 +131,34 @@ form_group <- function(data, col_, list_) {
     return(func_df_out)
 }
 
-# used in map to check what should be assigned
-form_group_helper <- function(data, list_) {
-    if (length(data) == 0) {
-        return(NA)
+
+# provides group counts after `call_boardgame_radio()` is used
+count_group <- function(data) {
+    
+    # create dataframe with counts for each category
+    func_df_out <- data %>% 
+        count(year_published, group) %>% 
+        pivot_wider(names_from = group, values_from = n)
+    
+    # if `All Selected` exists, add counts to other categories
+    if ('All Selected' %in% names(func_df_out)) {
+        # remove na values from `All Selected`
+        temp1 <- func_df_out$`All Selected` %>% replace_na(0)
+        # select category columns
+        temp2 <- func_df_out %>% select(-year_published, -`All Selected`)
+        # add `All Selected to each column`
+        new_df_out <- map_df(temp2, ~{. + temp1})
+        # create new output df by adding removed columns
+        func_df_out <- new_df_out %>% 
+            mutate(year_published = func_df_out$year_published,
+                   `All Selected` = func_df_out$`All Selected`) %>%
+            select(year_published, everything())
     }
-    else if (length(list_) > 1 & all(data)) {
-        return('All Selected')
-    }
-    else {
-        return(list_[data])
-    }
+    
+    return(func_df_out)
     
 }
 
-
-# helper function to check where user input matches
-check_list <- function(col_data, list_) {
-    map(col_data, ~(list_ %in% unlist(.x)))
-}
-
-
-# function which checks if one condition is met from requirements
-call_bool_series_or <- function(data, col_, list_){
-    
-    # check if one of the values matches the user input list
-    check <- check_list(data[[col_]], list_) %>%
-        map(~any(.)) %>% unlist()
-    
-    return(check)
-}
-
-
-# function which checks if conditions are met for all requirements
-call_bool_series_and <- function(data, col_, list_) {
-    
-    # check if all of the values contain the user input list
-    check <- check_list(data[[col_]], list_) %>%
-        map(~all(.)) %>% unlist()
-
-    # if there are no TRUE values in the entire list, switch all values to TRUE
-    if (sum(check) == 0) check = !check
-    return(check)
-}
 
 # return top 5 values based on the average for a given column
 call_boardgame_top <- function(data, col_, year_in, year_out) {
@@ -142,6 +173,7 @@ call_boardgame_top <- function(data, col_, year_in, year_out) {
     
     return(func_df_out)
 }
+
 
 # return unique values to populate dropdowns
 subset_data <- function(data, col_='category') {
@@ -162,11 +194,9 @@ remove_columns <- function(data) {
         average_rating,
     )
     
-    ### THIS MAY NEED TO BE FIXED ###
-    if ('groups' %in% names(data)) {
-        mutate(reduced_data, groups = data[[groups]])
+    if ('group' %in% names(data)) {
+        reduced_data <- mutate(reduced_data, group = data[['group']])
     }
-    
     return(reduced_data)
 }
     
