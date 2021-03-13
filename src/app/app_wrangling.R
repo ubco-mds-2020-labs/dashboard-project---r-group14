@@ -1,47 +1,63 @@
 library(dplyr)
 library(readr)
 library(tidyr)
+library(purrr)
 
+
+### TEMPORARY FOR TESTING
+#cat_in = c('Economic', 'Negotiation')
+#mech_in = list('Hand Management')
+#pub_in = c('')
+
+
+# calls data frame
+# fills select na values
+# creates list rom strings for mechanic, category, publisher
 call_boardgame_data <- function(){
     
-    # load dataframe
+    # load data, this is relative to the root folder in the repository
     filename <- 'data/app_data/board_game.csv'
     boardgame_data <- read_csv(filename)
 
     # convert NA value to 'Unknown' for specific columns
     repl_val <- 'Unknown'
-    boardgame_data %>% replace_na(list(category = repl_val, mechanic = repl_val,
-                                       publisher = repl_val))
+    # regex
+    reg_use <- ','
+    boardgame_data <- boardgame_data %>% 
+        replace_na(list(category = repl_val, 
+                        mechanic = repl_val,
+                        publisher = repl_val)) %>%
+        mutate(category = strsplit(category, reg_use),
+               mechanic = strsplit(mechanic, reg_use),
+               publisher = strsplit(publisher, reg_use)) %>%
+        select(-X1)
     
     return(boardgame_data)
 }
 
 call_boardgame_filter <- function(data, cat, mech, pub, n = NULL){
     func_df_out <- data
+    
+    # check each category
     cat_check <- call_bool_series_and('category', cat, data)
     mech_check <- call_bool_series_and('mechanic', mech, data)
     publ_check <- call_bool_series_and('publisher', pub, data)
     
+    # remove rows from df that aren't matched
     func_df_out <- func_df_out %>%
         mutate(cat_check, mech_check, publ_check) %>%
         filter(cat_check, mech_check, publ_check) %>%
         select(-cat_check, -mech_check, -publ_check)
     
+    # if a number is specified, return the number of entires
     if (!is.null(n)){
         func_df_out <- func_df_out %>% 
             arrange(desc(average_rating)) %>%
             slice_head(n = n)
-        
-        
     }
     return(func_df_out)
-        
 }
 
-### TEMPORARY FOR TESTING
-#cat_in = c('Economic', 'Negotiation')
-#mech_in = list('Hand Management')
-#pub_in = c('')
 
 call_boardgame_radio <- function(data, col_, list_) {
     func_df_out <- data
@@ -83,38 +99,36 @@ form_group <- function(col_, list_, data) {
 }
 
 
+# helper function to check where user input matches
+check_list <- function(col_data, list_) {
+    map(col_data, ~(list_ %in% unlist(.x)))
+}
+
+
+# function which checks if one condition is met from requirements
 call_bool_series_or <- function(col_, list_, data){
-    output <- vector(mode = 'list', length = nrow(data))
     
-    for (i in data[[col_]]) {
-        strings <- strsplit(i, ",")
-        unlisted_strings <- unlist(strings)
-        check <- any(list_ %in% unlisted_strings)
-        output[count] <- check
-        count <- count + 1
-    }
-    output <- unlist(output)
-    return(output)
+    # check if one of the values matches the user input list
+    check <- check_list(data[[col_]], list_) %>%
+        map(~any(.)) %>% unlist()
     
+    return(check)
 }
 
-    
+
+# function which checks if conditions are met for all requirements
 call_bool_series_and <- function(col_, list_, data) {
-    output <- vector(mode = 'list', length = nrow(data))
-    count <- 1
-    for (i in data[[col_]]) {
-        strings <- strsplit(i, ",")
-        unlisted_strings <- unlist(strings)
-        check <- all(list_ %in% unlisted_strings)
-        output[count] <- check
-        count <- count + 1
-    }
-    output <- unlist(output)
-    if (sum(output) == 0) {output = !output}
-    return(output)
+    
+    # check if all of the values contain the user input list
+    check <- check_list(data[[col_]], list_) %>%
+        map(~all(.)) %>% unlist()
+
+    # if there are no TRUE values in the entire list, switch all values to TRUE
+    if (sum(check) == 0) check = !check
+    return(check)
 }
 
-
+# return top category
 call_boardgame_top <- function(col_, year_in, year_out, data) {
     func_df_out <- data %>%
         filter(year_published >= year_in, year_published <= year_out) 
@@ -132,46 +146,29 @@ call_boardgame_top <- function(col_, year_in, year_out, data) {
     return(func_df_out)
 }
 
-
+# return unique values to populate dropdowns
 subset_data <- function(data, col_='category') {
     func_df_out <- data %>% unnest({{col_}})
     
-    output <- vector(mode = 'list', length = nrow(func_df_out))
-    count <- 1
+    unique_out <- map(func_df_out[[col_]], ~(unlist(.x))) %>%
+        unlist() %>% unique %>% na.omit()
     
-    for (i in func_df_out[[col_]]) {
-        strings <- strsplit(i, ",")
-        unlisted_strings <- unlist(strings)
-        output[count] <- unlisted_strings
-        count <- count + 1
-    }
-    unique_out <- unique(unlist(output))
-    return(unique_out[!is.na(unique_out)])
+    return(unique_out)
 }
 
 
+# used to remove columns prior to passing into plotting functions
 remove_columns <- function(data) {
     reduced_data <- data %>% select(
-        -X1,
-        -game_id,
-        -image,
-        -max_players,
-        -max_playtime,
-        -min_age,
-        -min_players,
-        -min_playtime,
-        -playing_time,
-        -thumbnail,
-        -artist,
-        -category,
-        -compilation,
-        -designer,
-        -expansion,
-        -family,
-        -mechanic,
-        -publisher,
-        -users_rated
+        name,
+        year_published,
+        average_rating,
     )
+    
+    ### THIS MAY NEED TO BE FIXED ###
+    if ('groups' %in% names(data)) {
+        mutate(reduced_data, groups = data[[groups]])
+    }
     
     return(reduced_data)
 }
