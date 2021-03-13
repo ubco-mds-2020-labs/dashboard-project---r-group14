@@ -17,7 +17,7 @@ call_boardgame_data <- function() {
     repl_val <- "Unknown"
     # regex RYAN TO REPLACE WITH CORRECT REGEX HERE
     reg_use <- ","
-    boardgame_data <- boardgame_data %>% 
+    boardgame_data <- boardgame_data %>%
         replace_na(list(category = repl_val,
                         mechanic = repl_val,
                         publisher = repl_val)) %>%
@@ -47,7 +47,7 @@ call_boardgame_filter <- function(data, cat, mech, pub, n = NULL) {
         arrange(desc(average_rating))
 
     # return number of entries is specified by user
-    if (!is.null(n)){
+    if (!is.null(n)) {
         func_df_out <- slice_head(func_df_out, n = n)
     }
 
@@ -58,7 +58,7 @@ call_boardgame_filter <- function(data, cat, mech, pub, n = NULL) {
 # helper function to check where user input matches
 # used in the `*and()` and `*or()` functions
 check_list <- function(col_data, list_) {
-    map(col_data, ~(list_ %in% unlist(.x)))
+    map(col_data, ~ (list_ %in% unlist(.x)))
 }
 
 
@@ -67,10 +67,11 @@ call_bool_series_and <- function(data, col_, list_) {
 
     # check if all of the values contain the user input list
     check <- check_list(data[[col_]], list_) %>%
-        map(~all(.)) %>% unlist()
+        map(~all(.)) %>%
+        unlist()
 
     # if there are no TRUE values in the entire list, switch all values to TRUE
-    if (sum(check) == 0) check = !check
+    if (sum(check) == 0) check <- !check
     return(check)
 }
 
@@ -80,7 +81,8 @@ call_bool_series_or <- function(data, col_, list_) {
 
     # check if one of the values matches the user input list
     check <- check_list(data[[col_]], list_) %>%
-        map(~any(.)) %>% unlist()
+        map(~any(.)) %>%
+        unlist()
 
     return(check)
 }
@@ -90,8 +92,8 @@ call_bool_series_or <- function(data, col_, list_) {
 call_boardgame_radio <- function(data, col_, list_) {
     func_df_out <- data
     # subset based on user selection
-    func_df_out <- func_df_out[call_bool_series_or(data, col_, list_),]
-    # call form group to add group column 
+    func_df_out <- func_df_out[call_bool_series_or(data, col_, list_), ]
+    # call form group to add group column
     func_df_out <- form_group(func_df_out, col_, list_)
     # remove all entries that aren't part of a group
     fucn_df_out <- filter(func_df_out, !is.na(group))
@@ -121,11 +123,11 @@ form_group <- function(data, col_, list_) {
     check <- check_list(data[[col_]], list_)
 
     # assign correct value
-    output <- map(check, ~(form_group_helper(.x, {{list_}}))) %>%
+    output <- map(check, ~ (form_group_helper(.x, {{list_}}))) %>%
         unlist()
 
     # add new column to dataframe
-    func_df_out <- data %>% 
+    func_df_out <- data %>%
         mutate(group = output)
 
     return(func_df_out)
