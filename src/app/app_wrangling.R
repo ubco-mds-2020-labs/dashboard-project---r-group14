@@ -63,7 +63,7 @@ call_boardgame_radio <- function(data, col_, list_) {
     func_df_out <- data
     func_df_out <- func_df_out[call_bool_series_or(col_, list_, data),]
     func_df_out <- form_group(col_, list_, func_df_out)    
-    fucn_df_out <- filter(func_df_out, !is.na({{col_}}))
+    fucn_df_out <- filter(func_df_out, !is.na(.data[[col_]]))
     return(fucn_df_out)
 }
 
@@ -128,27 +128,23 @@ call_bool_series_and <- function(col_, list_, data) {
     return(check)
 }
 
-# return top category
+# return top 5 values based on the average for a given column
 call_boardgame_top <- function(col_, year_in, year_out, data) {
     func_df_out <- data %>%
-        filter(year_published >= year_in, year_published <= year_out) 
-    
-    func_df_out$explode_on <- strsplit(func_df_out[[col_]], ",")
-    
-    func_df_out <- func_df_out %>%
-        unnest(explode_on) %>% 
-        group_by(explode_on) %>%
+        filter(year_published >= year_in, year_published <= year_out) %>%
+        unnest(.data[[col_]]) %>% 
+        # note, groupby did not like being passed curly curly
+        group_by(.data[[col_]]) %>%
         summarize(average = mean(average_rating)) %>%
         arrange(desc(average)) %>%
         slice_head(n = 5)
-        
-
+    
     return(func_df_out)
 }
 
 # return unique values to populate dropdowns
 subset_data <- function(data, col_='category') {
-    func_df_out <- data %>% unnest({{col_}})
+    func_df_out <- data %>% unnest(.data[[col_]])
     
     unique_out <- map(func_df_out[[col_]], ~(unlist(.x))) %>%
         unlist() %>% unique %>% na.omit()
