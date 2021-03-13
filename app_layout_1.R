@@ -397,9 +397,20 @@ app$callback(
   })
 
 
-# collapsable data set description
+# collapsible data set description
+# ** Tried to get this to work... can't seem to figure out the r equivalent
 
 
+#app$callback(
+  #list(output('collapse', 'is_open')),
+  #list(input('collapse-button', 'n_clicks')),
+  #list(state('collapse', 'is_open')),
+  #function(n_clicks, is_open) {
+    #if (n_clicks){
+      #return(!(is_open))
+    #}
+    #else{return(is_open)}
+  #})
 
 
 
