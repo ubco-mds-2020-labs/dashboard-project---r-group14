@@ -176,7 +176,7 @@ call_boardgame_top <- function(data, col_, year_in, year_out) {
 
 
 # return unique values to populate dropdowns
-subset_data <- function(data, col_='category') {
+subset_data <- function(data, col_ = 'category') {
     func_df_out <- data %>% unnest(.data[[col_]])
     
     unique_out <- map(func_df_out[[col_]], ~(unlist(.x))) %>%
@@ -199,10 +199,3 @@ remove_columns <- function(data) {
     }
     return(reduced_data)
 }
-    
-    
-    
-    
-
-
-
