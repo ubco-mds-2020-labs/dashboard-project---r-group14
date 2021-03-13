@@ -38,6 +38,7 @@ call_boardgame_filter <- function(data, cat, mech, pub, n = NULL){
         
 }
 
+### TEMPORARY FOR TESTING
 #cat_in = c('Economic', 'Negotiation')
 #mech_in = list('Hand Management')
 #pub_in = c('')
@@ -120,8 +121,14 @@ call_boardgame_top <- function(col_, year_in, year_out, data) {
     
     func_df_out$explode_on <- strsplit(func_df_out[[col_]], ",")
     
+    func_df_out <- func_df_out %>%
+        unnest(explode_on) %>% 
+        group_by(explode_on) %>%
+        summarize(average = mean(average_rating)) %>%
+        arrange(desc(average)) %>%
+        slice_head(n = 5)
+        
 
-    
     return(func_df_out)
 }
 
