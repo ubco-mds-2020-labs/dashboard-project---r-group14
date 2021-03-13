@@ -138,8 +138,8 @@ form_group <- function(data, col_, list_) {
 count_group <- function(data) {
 
     # create dataframe with counts for each category
-    func_df_out <- data %>% 
-        count(year_published, group) %>% 
+    func_df_out <- data %>%
+        count(year_published, group) %>%
         pivot_wider(names_from = group, values_from = n)
 
     # if `All Selected` exists, add counts to other categories
@@ -149,9 +149,9 @@ count_group <- function(data) {
         # select category columns
         temp2 <- func_df_out %>% select(-year_published, -`All Selected`)
         # add `All Selected to each column`
-        new_df_out <- map_df(temp2, ~{. + temp1})
+        new_df_out <- map_df(temp2, ~ {. + temp1})
         # create new output df by adding removed columns
-        func_df_out <- new_df_out %>% 
+        func_df_out <- new_df_out %>%
             mutate(year_published = func_df_out$year_published,
                    `All Selected` = func_df_out$`All Selected`) %>%
             select(year_published, everything())
@@ -165,7 +165,7 @@ count_group <- function(data) {
 call_boardgame_top <- function(data, col_, year_in, year_out) {
     func_df_out <- data %>%
         filter(year_published >= year_in, year_published <= year_out) %>%
-        unnest(.data[[col_]]) %>% 
+        unnest(.data[[col_]]) %>%
         # note, groupby did not like being passed curly curly
         group_by(.data[[col_]]) %>%
         summarize(average = mean(average_rating)) %>%
@@ -180,8 +180,10 @@ call_boardgame_top <- function(data, col_, year_in, year_out) {
 subset_data <- function(data, col_ = "category") {
     func_df_out <- data %>% unnest(.data[[col_]])
 
-    unique_out <- map(func_df_out[[col_]], ~(unlist(.x))) %>%
-        unlist() %>% unique %>% na.omit()
+    unique_out <- map(func_df_out[[col_]], ~ (unlist(.x))) %>%
+        unlist() %>%
+        unique() %>%
+        na.omit()
 
     return(unique_out)
 }
