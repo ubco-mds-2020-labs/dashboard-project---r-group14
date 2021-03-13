@@ -149,7 +149,7 @@ count_group <- function(data) {
         # select category columns
         temp2 <- func_df_out %>% select(-year_published, -`All Selected`)
         # add `All Selected to each column`
-        new_df_out <- map_df(temp2, ~ {. + temp1})
+        new_df_out <- map_df(temp2, ~ (. + temp1))
         # create new output df by adding removed columns
         func_df_out <- new_df_out %>%
             mutate(year_published = func_df_out$year_published,
