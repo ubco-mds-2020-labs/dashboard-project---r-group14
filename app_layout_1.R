@@ -7,16 +7,50 @@ library(dashCoreComponents)
 library(dashBootstrapComponents)
 library(ggplot2)
 library(plotly)
+source("./src/app/app_wrangling.R")
+
+options(warn = 2, keep.source = TRUE, error = quote({
+  # Debugging in R
+  #   http://www.stats.uwo.ca/faculty/murdoch/software/debuggingR/index.shtml
+  #
+  # Post-mortem debugging
+  #   http://www.stats.uwo.ca/faculty/murdoch/software/debuggingR/pmd.shtml
+  #
+  # Relation functions:
+  #   dump.frames
+  #   recover
+  # >>limitedLabels  (formatting of the dump with source/line numbers)
+  #   sys.frame (and associated)
+  #   traceback
+  #   geterrmessage
+  #
+  # Output based on the debugger function definition.
+  # TODO: setup option for dumping to a file (?)
+  # Set `to.file` argument to write this to a file for post-mortem debugging    
+  dump.frames()  # writes to last.dump
+  n <- length(last.dump)
+  if (n > 0) {
+    calls <- names(last.dump)
+    cat("Environment:\n", file = stderr())
+    cat(paste0("  ", seq_len(n), ": ", calls), sep = "\n", file = stderr())
+    cat("\n", file = stderr())
+  }
+  if (!interactive()) q()
+}))
 
 
 # * WRANGLING - load board game data here
-
+boardgame_data <- call_boardgame_data()
+head(boardgame_data)
 
 
 # * WRANGLING - get dictionary for dropdowns here
-
-
-
+col_key_list <- c("category", "mechanic", "publisher")
+col_dict <- vector(mode="list", length=3)
+names(col_dict) <- col_key_list
+col_dict[[1]] <- subset_data(boardgame_data, col_key_list[1])
+col_dict[[2]] <- subset_data(boardgame_data, col_key_list[2])
+col_dict[[3]] <- subset_data(boardgame_data, col_key_list[3])
 
   
 
@@ -203,8 +237,15 @@ selected_style=tab_selected_style)))))))
 # app callbacks
 
 # radio button selection options to populate drop down
-
 # this will return something like [{"label": c, "value": c} for c in col_dict[col]]
+app$callback(
+  list(output("radio-dependent", "options")),
+  list(input("radio-selection", "value")),
+  function(chosen_selection){
+    # TODO HERE
+    # Translate the python
+  }
+)
 
 
 # scatter plot tab 1
