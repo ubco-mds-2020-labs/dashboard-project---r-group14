@@ -44,9 +44,10 @@ call_boardgame_filter <- function(data, cat, mech, pub, n = NULL){
 
 call_boardgame_radio <- function(data, col_, list_) {
     func_df_out <- data
-    return(func_df_out[call_bool_series_or(col_, list_, data),])
-    
-    ### CALL FORM GROUP
+    func_df_out <- func_df_out[call_bool_series_or(col_, list_, data),]
+    func_df_out <- form_group(col_, list_, func_df_out)    
+    fucn_df_out <- filter(func_df_out, !is.na({{col_}}))
+    return(fucn_df_out)
 }
 
 form_group <- function(col_, list_, data) {
@@ -58,8 +59,17 @@ form_group <- function(col_, list_, data) {
         strings <- strsplit(i, ",")
         unlisted_strings <- unlist(strings)
         check <- (list_ %in% unlisted_strings)
-        list_result <- list_[check]
-        if (length(list_result) == 0) {list_result = NA}
+        
+        if (length(list_[check]) == 0) {
+            list_result = NA
+        }
+        else if (length(list_) > 1 & all(check)) {
+            list_result <- 'All Selected'
+        }
+        else {
+            list_result <- list_[check]
+        }
+        
         output[count] <- list_result
         count <- count + 1
     }
@@ -68,13 +78,7 @@ form_group <- function(col_, list_, data) {
     func_df_out <- func_df_out %>% 
         mutate(group = output)
     
-    # SOME SORT OF .JOIN THING HERE, MAYBE NOT NECESSARY
-    
-    
-    
     return(func_df_out)
-    
-    
 }
 
 
@@ -122,7 +126,22 @@ call_boardgame_top <- function(col_, year_in, year_out, data) {
 }
 
 
+subset_data <- function(data, col_='category') {
+    func_df_out <- data %>% unnest({{col_}})
     
+    output <- vector(mode = 'list', length = nrow(func_df_out))
+    count <- 1
+    
+    for (i in func_df_out[[col_]]) {
+        strings <- strsplit(i, ",")
+        unlisted_strings <- unlist(strings)
+        output[count] <- unlisted_strings
+        count <- count + 1
+    }
+    unique_out <- unique(unlist(output))
+    return(unique_out[!is.na(unique_out)])
+}
+
 
 remove_columns <- function(data) {
     reduced_data <- data %>% select(
