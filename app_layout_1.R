@@ -8,6 +8,7 @@ library(dashBootstrapComponents)
 library(ggplot2)
 library(plotly)
 source("./src/app/app_wrangling.R")
+source("./src/app/app_graphing.R")
 library(dashTable)
 
 options(warn = 1, keep.source = TRUE, error = quote({
