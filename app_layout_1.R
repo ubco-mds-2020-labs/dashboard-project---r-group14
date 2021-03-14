@@ -79,7 +79,6 @@ list(
 htmlP( "Please select any combination of categories, mechanics, publishers."),
 htmlBr(),
 htmlP("Please select categories:"),
-# dropdown for categories goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
 dccDropdown(
   id = "category-widget",
   options=(
@@ -90,7 +89,6 @@ dccDropdown(
 ),
 htmlBr(),
 htmlP("Please select mechanics:"),
-# dropdown for mechanics goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
 dccDropdown(
   id = "mechanic-widget",
   options=(
@@ -100,7 +98,6 @@ dccDropdown(
   value=NULL,
 ),
 htmlBr(),htmlP("Please select publishers:"),
-# dropdown for mechanics goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
 dccDropdown(
   id = "publisher-widget",
   options=(
