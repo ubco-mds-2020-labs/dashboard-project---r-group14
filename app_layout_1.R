@@ -7,27 +7,30 @@ library(dashCoreComponents)
 library(dashBootstrapComponents)
 library(ggplot2)
 library(plotly)
+source("./src/app/app_wrangling.R")
 
 
 # * WRANGLING - load board game data here
-
-
+boardgame_data <- call_boardgame_data()
 
 # * WRANGLING - get dictionary for dropdowns here
+col_key_list <- c("category", "mechanic", "publisher")
+col_dict <- vector(mode = "list", length = 3)
+names(col_dict) <- col_key_list
 
+for (idx in 1:3) {
+  col_dict[[idx]] <- subset_data(boardgame_data, col_key_list[idx])[[1]]
+}
 
-
-
-  
 
 # title for entire dashboard
-title<-function() {
- 
-return (htmlDiv(list(htmlH1("Board Game Trends Dashboard"))))}
+title <- function() {
+  return(htmlDiv(list(htmlH1("Board Game Trends Dashboard"))))
+}
 
 # description card tab 1
-description_card<- function(){
-return (htmlDiv(
+description_card <- function() {
+return(htmlDiv(
 id="description-card",
 list(
 htmlH5("Welcome to our Board Games Dashboard"),
@@ -45,13 +48,28 @@ list(
 htmlLabel("Select what you want to view:"),
 htmlBr(),
 htmlBr(),
-# add radio button
+dccRadioItems(
+  id="radio-selection",
+  options=list(
+    list(label = "Categories", value = "category"),
+    list(label = "Mechanics", value = "mechanic"),
+    list(label = "Publishers", value = "publisher")
+  ),
+  value="mechanic"
+),
 htmlBr(),
 htmlLabel("Select elements to view:"),
 htmlBr(),
-htmlBr())))}
-   # add radio button dependent drop down,
-  
+htmlBr(),
+dccDropdown(
+  id = "radio-dependent",
+  options=list(),
+  multi=TRUE,
+  value=NULL,
+  # labelStyle=list("display"="block")
+)
+)))}
+
 
 
 generate_control_card_tab2 <- function() {
@@ -203,8 +221,17 @@ selected_style=tab_selected_style)))))))
 # app callbacks
 
 # radio button selection options to populate drop down
-
 # this will return something like [{"label": c, "value": c} for c in col_dict[col]]
+app$callback(
+  list(output("radio-dependent", "options")),
+  list(input("radio-selection", "value")),
+  function(chosen_selection){
+
+    outlist <- list(lapply(col_dict[[chosen_selection]], function(x) return(list(label=x, value=x))))
+  
+    return(outlist)
+  }
+)
 
 
 # scatter plot tab 1
