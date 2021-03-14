@@ -8,6 +8,36 @@ library(dashBootstrapComponents)
 library(ggplot2)
 library(plotly)
 source("./src/app/app_wrangling.R")
+library(dashTable)
+
+options(warn = 1, keep.source = TRUE, error = quote({
+  # Debugging in R
+  #   http://www.stats.uwo.ca/faculty/murdoch/software/debuggingR/index.shtml
+  #
+  # Post-mortem debugging
+  #   http://www.stats.uwo.ca/faculty/murdoch/software/debuggingR/pmd.shtml
+  #
+  # Relation functions:
+  #   dump.frames
+  #   recover
+  # >>limitedLabels  (formatting of the dump with source/line numbers)
+  #   sys.frame (and associated)
+  #   traceback
+  #   geterrmessage
+  #
+  # Output based on the debugger function definition.
+  # TODO: setup option for dumping to a file (?)
+  # Set `to.file` argument to write this to a file for post-mortem debugging    
+  dump.frames()  # writes to last.dump
+  n <- length(last.dump)
+  if (n > 0) {
+    calls <- names(last.dump)
+    cat("Environment:\n", file = stderr())
+    cat(paste0("  ", seq_len(n), ": ", calls), sep = "\n", file = stderr())
+    cat("\n", file = stderr())
+  }
+  if (!interactive()) q()
+}))
 
 
 # * WRANGLING - load board game data here
@@ -200,9 +230,21 @@ marks = list(
 # card 6 containing the control card for tab 2
 sixth_card = dbcCard(dbcCardBody(list(generate_control_card_tab2())))
 
-seventh_card = dbcCard(dbcCardBody(list(htmlDiv("Plot for top 10 games goes here"
-        # top n games chart goes here
-))))
+seventh_card = dbcCard(dbcCardBody(
+  list(
+    htmlDiv("Plot for top 10 games goes here"),
+    dashDataTable(
+      id="top_n_games_datatable",
+      data=NULL,
+      columns =lapply(colnames(data), 
+                      function(colName){
+                        list(
+                          id = colName,
+                          name = colName
+                        )
+                      }),      # top n games chart goes here
+)
+)))
 
 # card 8 containing the data table for the top n games for tab 2
 eight_card = dbcCard(dbcCardBody(list(htmlH5("Top 10 Games Facts Table:")
@@ -307,6 +349,26 @@ return(list(string))})
     #else{return(is_open)}
   #})
 
+# top n games table
+app$callback(
+  list(output("top_n_games_datatable", "data")),
+  list(input("category-widget", "value"),
+       input("mechanic-widget", "value"),
+       input("publisher-widget", "value")),
+  function(c, m, p, n=10) {
+    print(c)
+    print(m)
+    print(p)
+    # print(data.frame(boardgame_data %>% select("game_id", "name") %>% head(n)))
+    # data.frame(boardgame_data %>% select("game_id", "name") %>% head(n))
+    
+    shit <- data.frame(boardgame_data[1:15], c("game_id", "name"))
+    columns <- lapply(colnames(shit), function(colName){list(id = colName,name = colName)})
+    return(shit)
+  }
+)
+
 
 
 app$run_server(debug = T) 
+
