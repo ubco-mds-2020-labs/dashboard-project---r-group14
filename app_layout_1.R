@@ -15,22 +15,22 @@ boardgame_data <- call_boardgame_data()
 
 # * WRANGLING - get dictionary for dropdowns here
 col_key_list <- c("category", "mechanic", "publisher")
-col_dict <- vector(mode="list", length=3)
+col_dict <- vector(mode = "list", length = 3)
 names(col_dict) <- col_key_list
 
-for (idx in 1:3){
+for (idx in 1:3) {
   col_dict[[idx]] <- subset_data(boardgame_data, col_key_list[idx])[[1]]
 }
 
 
 # title for entire dashboard
-title<-function() {
- 
-return (htmlDiv(list(htmlH1("Board Game Trends Dashboard"))))}
+title <- function() {
+  return(htmlDiv(list(htmlH1("Board Game Trends Dashboard"))))
+}
 
 # description card tab 1
-description_card<- function(){
-return (htmlDiv(
+description_card <- function() {
+return(htmlDiv(
 id="description-card",
 list(
 htmlH5("Welcome to our Board Games Dashboard"),
