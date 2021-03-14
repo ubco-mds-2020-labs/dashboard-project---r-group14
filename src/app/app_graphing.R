@@ -54,7 +54,7 @@ count_plot_dates <- function(data, col='category', list_=list()) {
          y = "# of Games Published") +
     ggtitle("GameCount based on Published Year")
   
-  return(count_plot)
+  return(ggplotly(count_plot))
   
 }
 
@@ -67,7 +67,7 @@ rank_plot_dates <- function(data, col="category", year_in=1990, year_out=2010, c
         y=eval(parse(text=col))) +
     geom_col(fill = colour_) 
   
-  return(rank_plot)
+  return(ggplot(rank_plot))
 }
 
 rank_plot_facet <- function(data, year_in, year_out) {
@@ -88,9 +88,14 @@ top_n_plot <- function(data, cat=list(), mech=list(), pub=list(), n=10) {
         y=average_rating,
         fill=name) +
     geom_col() +
+    labs(x = "",
+         y="Average Rating",
+         fill="Name") +
     ggtitle("Top 10 Games Based on User Selection") +
     theme(axis.text.x = element_blank(),
-          axis.ticks.x = element_blank() )
+          axis.ticks.x = element_blank() ) +
+    scale_y_continuous(expand = c(0,0),
+                       limits = c(0,10))
   
-  return(plotly(top_plot))
+  return(ggplotly(top_plot))
 }
