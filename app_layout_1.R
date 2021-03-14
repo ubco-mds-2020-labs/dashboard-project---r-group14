@@ -80,11 +80,35 @@ htmlP( "Please select any combination of categories, mechanics, publishers."),
 htmlBr(),
 htmlP("Please select categories:"),
 # dropdown for categories goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
+dccDropdown(
+  id = "category-widget",
+  options=(
+    lapply(col_dict[["category"]], function(x) return(list(label=x, value=x)))
+  ),
+  multi=TRUE,
+  value=NULL,
+),
 htmlBr(),
 htmlP("Please select mechanics:"),
 # dropdown for mechanics goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
+dccDropdown(
+  id = "mechanic-widget",
+  options=(
+    lapply(col_dict[["mechanic"]], function(x) return(list(label=x, value=x)))
+  ),
+  multi=TRUE,
+  value=NULL,
+),
 htmlBr(),htmlP("Please select publishers:"),
 # dropdown for mechanics goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
+dccDropdown(
+  id = "publisher-widget",
+  options=(
+    lapply(col_dict[["publisher"]], function(x) return(list(label=x, value=x)))
+  ),
+  multi=TRUE,
+  value=NULL,
+),
 htmlBr(),
 htmlBr())))}
 
