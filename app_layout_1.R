@@ -79,12 +79,33 @@ list(
 htmlP( "Please select any combination of categories, mechanics, publishers."),
 htmlBr(),
 htmlP("Please select categories:"),
-# dropdown for categories goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
+dccDropdown(
+  id = "category-widget",
+  options=(
+    col_dict[["category"]] %>% map(function(x) return(list(label=x, value=x)))
+  ),
+  multi=TRUE,
+  value=NULL,
+),
 htmlBr(),
 htmlP("Please select mechanics:"),
-# dropdown for mechanics goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
+dccDropdown(
+  id = "mechanic-widget",
+  options=(
+    col_dict[["mechanic"]] %>% map(function(x) return(list(label=x, value=x)))
+  ),
+  multi=TRUE,
+  value=NULL,
+),
 htmlBr(),htmlP("Please select publishers:"),
-# dropdown for mechanics goes here, select from dwranglingpart with dictionary for dropdowns at beggining of code
+dccDropdown(
+  id = "publisher-widget",
+  options=(
+    col_dict[["publisher"]] %>% map(function(x) return(list(label=x, value=x)))
+  ),
+  multi=TRUE,
+  value=NULL,
+),
 htmlBr(),
 htmlBr())))}
 
