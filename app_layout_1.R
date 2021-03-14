@@ -82,7 +82,7 @@ htmlP("Please select categories:"),
 dccDropdown(
   id = "category-widget",
   options=(
-    lapply(col_dict[["category"]], function(x) return(list(label=x, value=x)))
+    col_dict[["category"]] %>% map(function(x) return(list(label=x, value=x)))
   ),
   multi=TRUE,
   value=NULL,
@@ -92,7 +92,7 @@ htmlP("Please select mechanics:"),
 dccDropdown(
   id = "mechanic-widget",
   options=(
-    lapply(col_dict[["mechanic"]], function(x) return(list(label=x, value=x)))
+    col_dict[["mechanic"]] %>% map(function(x) return(list(label=x, value=x)))
   ),
   multi=TRUE,
   value=NULL,
@@ -101,7 +101,7 @@ htmlBr(),htmlP("Please select publishers:"),
 dccDropdown(
   id = "publisher-widget",
   options=(
-    lapply(col_dict[["publisher"]], function(x) return(list(label=x, value=x)))
+    col_dict[["publisher"]] %>% map(function(x) return(list(label=x, value=x)))
   ),
   multi=TRUE,
   value=NULL,
