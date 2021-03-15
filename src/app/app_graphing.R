@@ -6,6 +6,7 @@ source("./src/app/app_wrangling.R")
 scatter_plot_dates <- function(data, col="category", list_=list()) {
   # changes between no selection and selection
   if (length(list_) == 0) {
+    print("jlakdjflkasjdfkljsklfjlk")
     set_data <- data
     set_color <- "grey"
   }else {
@@ -20,18 +21,18 @@ scatter_plot_dates <- function(data, col="category", list_=list()) {
         y = average_rating,
         fill = set_color) +
     geom_point()
-  #   labs(x = "",
-  #        y = "Average Rating") +
-  #   ggtitle("Game Popularity Based on Published year") +
-  #   geom_line(aes(
-  #     x=year_published,
-  #     y=mean(average_rating),
-  #     fill="dark grey"
-  #   ))
-  # 
-  # 
+    # labs(x = "",
+    #      y = "Average Rating") +
+    # ggtitle("Game Popularity Based on Published year") +
+    # geom_line(aes(
+    #   x=year_published,
+    #   y=mean(average_rating),
+    #   fill="dark grey"
+    # ))
+
+
   # scatter_plot <- ggplotly(scatter_plot, "text") %>% style(hoverinfo = "name")
-  ggsave("cars.png")
+
   return(scatter_plot)
 }
 

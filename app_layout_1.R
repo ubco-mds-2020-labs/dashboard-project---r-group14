@@ -176,7 +176,7 @@ dbcCardBody(htmlDiv(
       "Select either categories, mechanics or publishers.\
       Then select different elements to view on the\
       following two figures."),
-    dccGraph(id = "scatter", figure=NULL)
+    dccGraph(id = "scatter")
     )
   )
   )
@@ -312,7 +312,11 @@ app$callback(
   list(input("radio-selection", "value"),
        input("radio-dependent", "value")),
   function(column, list_) {
-    ggplotly(scatter_plot_dates(boardgame_data, column, list_))
+
+    p <- scatter_plot_dates(boardgame_data, column, list_)
+    ggsave("cars.png")
+    
+    return(ggplotly(p))
     
   }
 )
