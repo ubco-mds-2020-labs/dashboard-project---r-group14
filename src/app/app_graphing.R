@@ -87,15 +87,35 @@ rank_plot_dates <- function(data,
 }
 
 rank_plot_facet <- function(data, year_in, year_out) {
-  cat_plot <- rank_plot_dates(data, "category", year_in, year_out, color_="#ff7f0e" )
-  mech_plot <- rank_plot_dates(data, "mechanic", year_in, year_out, color_="#17becf" )
-  pub_plot <- rank_plot_dates(data, "publisher", year_in, year_out, color_="#e377c2" )
+  cat_plot <- rank_plot_dates(data,
+                              "category",
+                              year_in,
+                              year_out,
+                              color_ = "#ff7f0e")
+  mech_plot <- rank_plot_dates(data,
+                               "mechanic",
+                               year_in,
+                               year_out,
+                               color_ = "#17becf")
+  pub_plot <- rank_plot_dates(data,
+                              "publisher",
+                              year_in,
+                              year_out,
+                              color_=  "#e377c2")
 
-  total_plot <- subplot(cat_plot, mech_plot, pub_plot, nrows = 1, margin = 0.1)
+  total_plot <- subplot(cat_plot,
+                        mech_plot,
+                        pub_plot,
+                        nrows = 1,
+                        margin = 0.1)
 
   return(total_plot)
 }
-top_n_plot <- function(data, cat = c(), mech = c(), pub = c(), n = 10) {
+top_n_plot <- function(data,
+                       cat = c(),
+                       mech = c(),
+                       pub = c(),
+                       n = 10) {
   set_data <- call_boardgame_filter(data, cat, mech, pub, n)
 
   top_plot <- set_data %>%
