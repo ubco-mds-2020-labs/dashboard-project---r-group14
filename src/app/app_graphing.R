@@ -15,31 +15,26 @@ scatter_plot_dates <- function(data, col="category", list_=c()) {
       remove_columns()
     set_color <- "group"
   }
-  
   # scatter plot
   scatter_plot <- set_data %>%
     ggplot() +
     aes(x = year_published,
         y = average_rating,
-        color = eval(parse(text=set_color))) +
+        color = eval(parse(text = set_color))) +
     geom_point(alpha = 0.4) +
     labs(x = "",
          y = "Average Rating",
          color = "") +
     ggtitle("Game Popularity Based on Published Year") 
-  
-  
-  scatter_plot <- ggplotly(scatter_plot, tooltip=c("average_rating")) %>%
-    layout(title = list(text = paste0('Game Popularity Based on Published Year',
-                                      '<br>',
-                                      '<sup>',
-                                      'Light grey line shows annual average rating of ALL games',
-                                      '</sup>')))
-  
+  scatter_plot <- ggplotly(scatter_plot, tooltip = c("average_rating")) %>%
+    layout(title = list(text = paste0("Game Popularity Based on Published Year",
+                                      "<br>",
+                                      "<sup>",
+                                      "Light grey line shows annual average rating of ALL games",
+                                      "</sup>")))
   return(scatter_plot)
 }
-
-count_plot_dates <- function(data, col='category', list_=c()) {
+count_plot_dates <- function(data, col="category", list_=c()) {
   if (length(list_) == 0) {
     set_data <- data %>%
       remove_columns()
