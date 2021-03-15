@@ -95,8 +95,11 @@ call_boardgame_radio <- function(data, col_, list_) {
     func_df_out <- func_df_out[call_bool_series_or(data, col_, list_), ]
     # call form group to add group column
     func_df_out <- form_group(func_df_out, col_, list_)
+    print("inside call_boardgame_radio")
     # remove all entries that aren't part of a group
     fucn_df_out <- filter(func_df_out, !is.na(group))
+    
+    print(head(func_df_out[, c("name", "group")], 10))
     return(fucn_df_out)
 }
 
@@ -118,7 +121,8 @@ form_group_helper <- function(data, list_) {
 
 # form groupings based on user selection from `call_boardgame_radio`
 form_group <- function(data, col_, list_) {
-
+    print("this is the list")
+    print(list_)
     # check if values contain the user input
     check <- check_list(data[[col_]], list_)
 

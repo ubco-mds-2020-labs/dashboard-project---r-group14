@@ -10,7 +10,7 @@ library(plotly)
 source("./src/app/app_wrangling.R")
 source("./src/app/app_graphing.R")
 library(dashTable)
-
+options(error = function() traceback(3))
 options(warn = 1, keep.source = TRUE, error = quote({
   # Debugging in R
   #   http://www.stats.uwo.ca/faculty/murdoch/software/debuggingR/index.shtml
@@ -169,10 +169,18 @@ htmlDiv(id="left-column",
 className="four columns",list(description_card(),htmlBr(),generate_control_card()))))
 
 second_card = dbcCard(
-dbcCardBody(htmlDiv(list(htmlH4("Board Game Ratings and Counts from 1950 to 2016"),htmlP(
-"Select either categories, mechanics or publishers.\
-Then select different elements to view on the\
-following two figures.")))))
+dbcCardBody(htmlDiv(
+  list(
+    htmlH4("Board Game Ratings and Counts from 1950 to 2016"),
+    htmlP(
+      "Select either categories, mechanics or publishers.\
+      Then select different elements to view on the\
+      following two figures."),
+    dccGraph(id = "scatter", figure=NULL)
+    )
+  )
+  )
+)
           # scatter plot tab 1 goes here
          # histogram tab 1 goes here)))
 
@@ -233,18 +241,18 @@ sixth_card = dbcCard(dbcCardBody(list(generate_control_card_tab2())))
 
 seventh_card = dbcCard(dbcCardBody(
   list(
-    htmlDiv("Plot for top 10 games goes here"),
-    dashDataTable(
-      id="top_n_games_datatable",
-      data=NULL,
-      columns =lapply(colnames(data), 
-                      function(colName){
-                        list(
-                          id = colName,
-                          name = colName
-                        )
-                      }),      # top n games chart goes here
-)
+    htmlDiv("Plot for top 10 games goes here")
+#     dashDataTable(
+#       id="top_n_games_datatable",
+#       data=NULL,
+#       columns =lapply(colnames(data), 
+#                       function(colName){
+#                         list(
+#                           id = colName,
+#                           name = colName
+#                         )
+#                       }),      # top n games chart goes here
+# )
 )))
 
 # card 8 containing the data table for the top n games for tab 2
@@ -289,7 +297,7 @@ selected_style=tab_selected_style)))))))
 app$callback(
   list(output("radio-dependent", "options")),
   list(input("radio-selection", "value")),
-  function(chosen_selection){
+  function(chosen_selection) {
 
     outlist <- list(lapply(col_dict[[chosen_selection]], function(x) return(list(label=x, value=x))))
   
@@ -299,6 +307,15 @@ app$callback(
 
 
 # scatter plot tab 1
+app$callback(
+  list(output("scatter", "figure")),
+  list(input("radio-selection", "value"),
+       input("radio-dependent", "value")),
+  function(column, list_) {
+    ggplotly(scatter_plot_dates(boardgame_data, column, list_))
+    
+  }
+)
 
 
 
@@ -350,26 +367,26 @@ return(list(string))})
     #else{return(is_open)}
   #})
 
-# top n games table
-app$callback(
-  list(output("top_n_games_datatable", "data")),
-  list(input("category-widget", "value"),
-       input("mechanic-widget", "value"),
-       input("publisher-widget", "value")),
-  function(c, m, p, n=10) {
-    print(c)
-    print(m)
-    print(p)
-    # print(data.frame(boardgame_data %>% select("game_id", "name") %>% head(n)))
-    # data.frame(boardgame_data %>% select("game_id", "name") %>% head(n))
-    
-    shit <- data.frame(boardgame_data[1:15], c("game_id", "name"))
-    columns <- lapply(colnames(shit), function(colName){list(id = colName,name = colName)})
-    return(shit)
-  }
-)
+# # top n games table
+# app$callback(
+#   list(output("top_n_games_datatable", "data")),
+#   list(input("category-widget", "value"),
+#        input("mechanic-widget", "value"),
+#        input("publisher-widget", "value")),
+#   function(c, m, p, n=10) {
+#     print(c)
+#     print(m)
+#     print(p)
+#     # print(data.frame(boardgame_data %>% select("game_id", "name") %>% head(n)))
+#     # data.frame(boardgame_data %>% select("game_id", "name") %>% head(n))
+#     
+#     shit <- data.frame(boardgame_data[1:15], c("game_id", "name"))
+#     columns <- lapply(colnames(shit), function(colName){list(id = colName,name = colName)})
+#     return(shit)
+#   }
+# )
 
 
 
-app$run_server(debug = T) 
+app$run_server(debug = F) 
 

@@ -1,7 +1,7 @@
 library(ggplot2)
 library(plotly)
 library(ggpubr)
-source("app_wrangling.R")
+source("./src/app/app_wrangling.R")
 
 scatter_plot_dates <- function(data, col="category", list_=list()) {
   # changes between no selection and selection
@@ -19,19 +19,19 @@ scatter_plot_dates <- function(data, col="category", list_=list()) {
     aes(x = year_published,
         y = average_rating,
         fill = set_color) +
-    geom_point() +
-    labs(x = "",
-         y = "Average Rating") +
-    ggtitle("Game Popularity Based on Published year") +
-    geom_line(aes(
-      x=year_published,
-      y=mean(average_rating),
-      fill="dark grey"
-    ))
-  
-  
-  scatter_plot <- ggplotly(scatter_plot, "text") %>% style(hoverinfo = "name")
-  
+    geom_point()
+  #   labs(x = "",
+  #        y = "Average Rating") +
+  #   ggtitle("Game Popularity Based on Published year") +
+  #   geom_line(aes(
+  #     x=year_published,
+  #     y=mean(average_rating),
+  #     fill="dark grey"
+  #   ))
+  # 
+  # 
+  # scatter_plot <- ggplotly(scatter_plot, "text") %>% style(hoverinfo = "name")
+  ggsave("cars.png")
   return(scatter_plot)
 }
 
@@ -43,7 +43,6 @@ count_plot_dates <- function(data, col='category', list_=list()) {
     set_data <- call_boardgame_radio(data, col, list_)
     set_color <- set_data$group
   }
-  
   # count plot
   count_plot <- set_data %>%
     ggplot() +
