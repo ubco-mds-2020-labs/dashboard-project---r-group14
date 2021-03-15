@@ -32,7 +32,7 @@ scatter_plot_dates <- function(data, col="category", list_=list()) {
 
 
   # scatter_plot <- ggplotly(scatter_plot, "text") %>% style(hoverinfo = "name")
-
+  print(typeof(scatter_plot))
   return(scatter_plot)
 }
 

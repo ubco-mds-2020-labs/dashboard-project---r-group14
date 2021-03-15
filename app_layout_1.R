@@ -176,7 +176,7 @@ dbcCardBody(htmlDiv(
       "Select either categories, mechanics or publishers.\
       Then select different elements to view on the\
       following two figures."),
-    dccGraph(id = "scatter")
+    dccGraph(id = "scatter", figure = list())
     )
   )
   )
@@ -316,7 +316,7 @@ app$callback(
     p <- scatter_plot_dates(boardgame_data, column, list_)
     ggsave("cars.png")
     
-    return(ggplotly(p))
+    ggplotly(p)
     
   }
 )
