@@ -96,8 +96,8 @@ call_boardgame_radio <- function(data, col_, list_) {
     # call form group to add group column
     func_df_out <- form_group(func_df_out, col_, list_)
     # remove all entries that aren't part of a group
-    fucn_df_out <- filter(func_df_out, !is.na(group))
-    return(fucn_df_out)
+    func_df_out <- filter(func_df_out, !is.na(group))
+    return(func_df_out)
 }
 
 
@@ -123,8 +123,7 @@ form_group <- function(data, col_, list_) {
     check <- check_list(data[[col_]], list_)
 
     # assign correct value
-    output <- map(check, ~ (form_group_helper(.x, {{list_}}))) %>%
-        unlist()
+    output <- map(check, ~ (form_group_helper(.x, list_)))
 
     # add new column to dataframe
     func_df_out <- data %>%
