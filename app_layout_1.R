@@ -176,13 +176,13 @@ dbcCardBody(htmlDiv(
       "Select either categories, mechanics or publishers.\
       Then select different elements to view on the\
       following two figures."),
-    dccGraph(id = "scatter")
+    dccGraph(id = "scatter"),
+    dccGraph(id = "counts")
     )
   )
   )
 )
-          # scatter plot tab 1 goes here
-         # histogram tab 1 goes here)))
+         
 
 # card 3 containing the lower description and collapsible data set description for tab 1
 third_card = dbcCard(
@@ -207,8 +207,8 @@ marks = list(
 "2000"="2000",
 "2005"="2005",
 "2010" ="2010",
-"2015"= "2015"),value = list(1990,2010))))
-              # plot goes here 
+"2015"= "2015"),value = list(1990,2010)),dccGraph(id='facet_1')))
+              
 )))
     
   
@@ -233,8 +233,8 @@ marks = list(
 "2005"="2005",
 "2010" ="2010",
 "2015"= "2015"),value = list(1990,2010))))
-    # plot goes here 
-)))
+    
+,  dccGraph(id='facet_2'))))
 
 # card 6 containing the control card for tab 2
 sixth_card = dbcCard(dbcCardBody(list(generate_control_card_tab2())))
@@ -262,8 +262,7 @@ eight_card = dbcCard(dbcCardBody(list(htmlH5("Top 10 Games Facts Table:")
 
 # card 9 for data set description tab 1
 ninth_card = dbcCard(
-dbcCardBody(htmlDiv(dbcButton("Click here to view dataset description",id="collapse-button",className="mb-3",color="primary",),
-dbcCollapse(dbcCard(dbcCardBody(data_set_description())), id="collapse"))))
+dbcCardBody(htmlDiv(data_set_description())))
 
 # tab styling features for layout
 tabs_styles = list("height"= "44px")
@@ -313,25 +312,65 @@ app$callback(
        input("radio-dependent", "value")),
   function(column, list_) {
 
-    # p <- scatter_plot_dates(boardgame_data, column, list_)
+    
     p <- scatter_plot_dates(boardgame_data, column, unlist(list_))
-    ggsave("cars.png")
+    
     
     return(p)
     
   }
 )
 
-
-
 # stacked histogram of counts annual published counts
+
+app$callback(
+    output = list(id ="counts", property = "figure"),
+    list(input("radio-selection", "value"),
+         input("radio-dependent", "value")),
+    function(column, list_) {
+        
+        
+        p2 <- count_plot_dates(boardgame_data, column, unlist(list_))
+        
+        
+        return(p2)
+        
+    }
+)
 
 
 # 1st facet chart
 
+app$callback(
+    output = list(id ="facet_1", property = "figure"),
+    params=list(input(id="output-container-range-slider", property="value")),
+        
+    function(value) {
+  
+    val1 = as.numeric(unlist(value[1]))
+    val2 = as.numeric(unlist(value[2]))
+    p3 <- rank_plot_facet(boardgame_data, val1, val2)
+   
+    return(p3)
+        
+    }
+)
 
 
 # 2nd facet chart
+
+app$callback(
+    output = list(id ="facet_2", property = "figure"),
+    params=list(input(id="output-container-range-slider2", property="value")),
+    
+    function(value){
+        val1 = as.numeric(unlist(value[1]))
+        val2 = as.numeric(unlist(value[2]))
+        p4 <- rank_plot_facet(boardgame_data, val1, val2)
+        return(p4)
+        
+    }
+)
 
 
 
@@ -357,20 +396,7 @@ string=paste("Years Selected ", value1,"to ", value2)
 return(list(string))})
 
 
-# collapsible data set description
-# ** Tried to get this to work... can't seem to figure out the R equivalent
 
-
-#app$callback(
-  #list(output('collapse', 'is_open')),
-  #list(input('collapse-button', 'n_clicks')),
-  #list(state('collapse', 'is_open')),
-  #function(n_clicks, is_open) {
-    #if (n_clicks){
-      #return(!(is_open))
-    #}
-    #else{return(is_open)}
-  #})
 
 # # top n games table
 # app$callback(
