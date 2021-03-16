@@ -10,36 +10,6 @@ library(plotly)
 source("./src/app/app_wrangling.R")
 source("./src/app/app_graphing.R")
 library(dashTable)
-options(error = function() traceback(3))
-options(warn = 1, keep.source = TRUE, error = quote({
-  # Debugging in R
-  #   http://www.stats.uwo.ca/faculty/murdoch/software/debuggingR/index.shtml
-  #
-  # Post-mortem debugging
-  #   http://www.stats.uwo.ca/faculty/murdoch/software/debuggingR/pmd.shtml
-  #
-  # Relation functions:
-  #   dump.frames
-  #   recover
-  # >>limitedLabels  (formatting of the dump with source/line numbers)
-  #   sys.frame (and associated)
-  #   traceback
-  #   geterrmessage
-  #
-  # Output based on the debugger function definition.
-  # TODO: setup option for dumping to a file (?)
-  # Set `to.file` argument to write this to a file for post-mortem debugging    
-  dump.frames()  # writes to last.dump
-  n <- length(last.dump)
-  if (n > 0) {
-    calls <- names(last.dump)
-    cat("Environment:\n", file = stderr())
-    cat(paste0("  ", seq_len(n), ": ", calls), sep = "\n", file = stderr())
-    cat("\n", file = stderr())
-  }
-  if (!interactive()) q()
-}))
-
 
 # * WRANGLING - load board game data here
 boardgame_data <- call_boardgame_data()
@@ -241,26 +211,72 @@ marks = list(
 # card 6 containing the control card for tab 2
 sixth_card = dbcCard(dbcCardBody(list(generate_control_card_tab2())))
 
-seventh_card = dbcCard(dbcCardBody(
-  list(
-    htmlDiv("Plot for top 10 games goes here")
-#     dashDataTable(
-#       id="top_n_games_datatable",
-#       data=NULL,
-#       columns =lapply(colnames(data), 
-#                       function(colName){
-#                         list(
-#                           id = colName,
-#                           name = colName
-#                         )
-#                       }),      # top n games chart goes here
-# )
-)))
+seventh_card = dbcCard(
+  dbcCardBody(
+    list(
+      htmlDiv("Plot for top 10 games goes here"),
+      dccGraph(id="top_n_games")
+    )
+  )
+)
 
 # card 8 containing the data table for the top n games for tab 2
-eight_card = dbcCard(dbcCardBody(list(htmlH5("Top 10 Games Facts Table:")
-      # data table for top 10 games goes here, comes from wrangling
-)))
+eight_card = dbcCard(
+  dbcCardBody(
+    list(
+      htmlH5("Top 10 Games Facts Table:"),
+      dashDataTable(id="top_n_games_datatable",     
+                    columns = list(
+                      list(
+                        name = 'name',
+                        id = 'name'
+                      ),
+                      list(
+                        name = 'min_players',
+                        id = 'min_players'
+                      ),
+                      list(
+                        name = 'max_players',
+                        id = 'max_players'
+                      ),
+                      list(
+                        name = 'min_playtime',
+                        id = 'min_playtime'
+                      ),
+                      list(
+                        name = 'max_playtime',
+                        id = 'max_playtime'
+                      ),
+                      list(
+                        name = 'year_published',
+                        id = 'year_published'
+                      ),
+                      list(
+                        name = 'category',
+                        id = 'category'
+                      ),
+                      list(
+                        name = 'mechanic',
+                        id = 'mechanic'
+                      ),
+                      list(
+                        name = 'designer',
+                        id = 'designer'
+                      ),
+                      list(
+                        name = 'publisher',
+                        id = 'publisher'
+                      ),
+                      list(
+                        name = 'average_rating',
+                        id = 'average_rating'
+                      ),
+                      list(
+                        name = 'users_rated',
+                        id = 'users_rated'
+                      )
+                    )
+))))
 
 # card 9 for data set description tab 1
 ninth_card = dbcCard(
@@ -398,26 +414,88 @@ string=paste("Years Selected ", value1,"to ", value2)
 return(list(string))})
 
 
+# bar char tab 2
+app$callback(
+  output = list(id ="top_n_games", property = "figure"),
+  list(input("category-widget", "value"),
+       input("mechanic-widget", "value"),
+       input("publisher-widget", "value")),
+  function(c, m, p, n=10) {
+    p <- top_n_plot(boardgame_data, c, m, p, n=10)
+    return(p)
+  }
+)
+
+# data table tab 2
+app$callback(
+  output = list(list(id ="top_n_games_datatable", property = "data"),
+                list(id ="top_n_games_datatable", property = "columns")),
+  list(input("category-widget", "value"),
+       input("mechanic-widget", "value"),
+       input("publisher-widget", "value")),
+  function(c, m, p, n=10) {
+    t <- call_boardgame_filter(boardgame_data, c, m, p, n=10)
+    t <- t[c("name", "min_players",
+             "max_players", "min_playtime",
+             "max_playtime", "year_published",
+             "category", "mechanic",
+             "designer", "publisher",
+             "average_rating", "users_rated")]
+    columns <- list(
+      list(
+        name = 'name',
+        id = 'name'
+      ),
+      list(
+        name = 'min_players',
+        id = 'min_players'
+      ),
+      list(
+        name = 'max_players',
+        id = 'max_players'
+      ),
+      list(
+        name = 'min_playtime',
+        id = 'min_playtime'
+      ),
+      list(
+        name = 'max_playtime',
+        id = 'max_playtime'
+      ),
+      list(
+        name = 'year_published',
+        id = 'year_published'
+      ),
+      list(
+        name = 'category',
+        id = 'category'
+      ),
+      list(
+        name = 'mechanic',
+        id = 'mechanic'
+      ),
+      list(
+        name = 'designer',
+        id = 'designer'
+      ),
+      list(
+        name = 'publisher',
+        id = 'publisher'
+      ),
+      list(
+        name = 'average_rating',
+        id = 'average_rating'
+      ),
+      list(
+        name = 'users_rated',
+        id = 'users_rated'
+      )
+    )
+    return(list(t, columns))
+  }
+)
 
 
-# # top n games table
-# app$callback(
-#   list(output("top_n_games_datatable", "data")),
-#   list(input("category-widget", "value"),
-#        input("mechanic-widget", "value"),
-#        input("publisher-widget", "value")),
-#   function(c, m, p, n=10) {
-#     print(c)
-#     print(m)
-#     print(p)
-#     # print(data.frame(boardgame_data %>% select("game_id", "name") %>% head(n)))
-#     # data.frame(boardgame_data %>% select("game_id", "name") %>% head(n))
-#     
-#     shit <- data.frame(boardgame_data[1:15], c("game_id", "name"))
-#     columns <- lapply(colnames(shit), function(colName){list(id = colName,name = colName)})
-#     return(shit)
-#   }
-# )
 
 
 
