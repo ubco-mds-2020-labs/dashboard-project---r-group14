@@ -53,8 +53,8 @@ col_named_list <- map2(.x = col_names, .y = col_ids, .f = name_id_join)
 
 # * WRANGLING - sets up years for the slider
 years <- seq(1950, 2015, 5) %>% map(toString)
-print(years)
-stop()
+year_marks <- years %>% map(function(x) return(list(x = x)))
+print(year_marks)
 
 for (idx in 1:3) {
   col_dict[[idx]] <- subset_data(boardgame_data, col_key_list[idx])[[1]]
