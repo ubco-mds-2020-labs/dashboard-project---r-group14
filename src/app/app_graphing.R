@@ -23,7 +23,7 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
         y = average_rating,
         color = eval(parse(text = set_color))) +
     geom_point(alpha = 0.4) +
-    labs(x = "", 
+    labs(x = "",
          y = "Average Rating",
          color = "") +
     ggtitle("Game Popularity Based on Published Year")
