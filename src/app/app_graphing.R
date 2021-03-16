@@ -23,18 +23,15 @@ scatter_plot_dates <- function(data, col="category", list_=c()) {
         y = average_rating,
         color = eval(parse(text = set_color))) +
        geom_point(alpha = 0.4) +
-   labs(x = "",
-    y = "Average Rating",
-   color = "") +
-  ggtitle("Game Popularity Based on Published Year") 
- # scatter_plot <- ggplotly(scatter_plot, tooltip = c("average_rating")) %>%
- #layout(title = list(text = paste0("Game Popularity Based on Published Year",
-                                      #"<br>",
-                                      #"<sup>",
-                                     #"Light grey line shows annual "+
-                                     #   "average rating of ALL games",
-                                     # "</sup>")))
-  return(ggplotly(scatter_plot))
+    labs(x = "",
+         y = "Average Rating",
+         color = "") +
+    ggtitle("Game Popularity Based on Published Year")  +
+    theme_minimal()
+
+  scatter_plot <- ggplotly(scatter_plot, tooltip = c("y")) %>% layout(height=375)
+
+  return(scatter_plot)
 }
 count_plot_dates <- function(data, col="category", list_=c()) {
   if (length(list_) == 0) {
@@ -55,14 +52,17 @@ count_plot_dates <- function(data, col="category", list_=c()) {
     geom_bar() +
     labs(x = "",
          y = "# of Games Published",
-         title = "Game Count based on Published Year") 
-    #scale_y_continuous(expand = c(0, 0),
-                       #limits = c(0, NA))
-  #count_plot <- ggplotly(count_plot, tooltip = c("y"))
-  return(ggplotly(count_plot))
+         fill= "",
+         title = "Game Count based on Published Year") +
+    scale_y_continuous(expand = c(0, 0),
+                       limits = c(0, NA))  +
+    theme_minimal()
+  
+  count_plot <- ggplotly(count_plot, tooltip = c("y")) %>% layout(height=375)
+  return(count_plot)
   
 }
-rank_plot_dates <- function(data, col="category", year_in=1990, year_out=2010, color_="#ff7f0e") {
+rank_plot_dates <- function(data, col="category", year_in=1990, year_out=2010, color_) {
   setdata <- call_boardgame_top(data, col, year_in, year_out)
   rank_plot <- setdata %>%
     ggplot() +
@@ -70,7 +70,10 @@ rank_plot_dates <- function(data, col="category", year_in=1990, year_out=2010, c
         y=eval(parse(text=col))) +
     labs(x="Average Rating",
          y=col) +
-    geom_col(fill = "#ff7f0e")
+    coord_cartesian(xlim=c(5,10)) +
+    geom_col(fill = color_) +
+    theme_minimal()
+
   rank_plot <- ggplotly(rank_plot, tooltip=c("average"))
   return(rank_plot)
 }
@@ -78,8 +81,8 @@ rank_plot_facet <- function(data, year_in, year_out) {
   cat_plot <- rank_plot_dates(data, "category", year_in, year_out, color_="#ff7f0e" )
   mech_plot <- rank_plot_dates(data, "mechanic", year_in, year_out, color_="#17becf" )
   pub_plot <- rank_plot_dates(data, "publisher", year_in, year_out, color_="#e377c2" )
-  total_plot <- subplot(cat_plot, mech_plot, pub_plot, nrows=1, margin=0.1)
-  return(ggplotly(total_plot))
+  total_plot <- subplot(cat_plot, mech_plot, pub_plot, nrows=1, margin=0.1) %>% layout(height=250)
+  return(total_plot)
 }
 top_n_plot <- function(data, cat=c(), mech=c(), pub=c(), n=10) {
   set_data <- call_boardgame_filter(data, cat, mech, pub, n)
