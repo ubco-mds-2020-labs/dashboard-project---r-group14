@@ -96,7 +96,7 @@ dccDropdown(
   id = "radio-dependent",
   options=list(),
   multi=TRUE,
-  value=list(),
+  value=NULL,
   # labelStyle=list("display"="block")
 )
 )))}
@@ -116,7 +116,7 @@ dccDropdown(
     col_dict[["category"]] %>% map(function(x) return(list(label=x, value=x)))
   ),
   multi=TRUE,
-  value=list(),
+  value=NULL,
 ),
 htmlBr(),
 htmlP("Please select mechanics:"),
@@ -126,7 +126,7 @@ dccDropdown(
     col_dict[["mechanic"]] %>% map(function(x) return(list(label=x, value=x)))
   ),
   multi=TRUE,
-  value=list(),
+  value=NULL,
 ),
 htmlBr(),htmlP("Please select publishers:"),
 dccDropdown(
@@ -135,7 +135,7 @@ dccDropdown(
     col_dict[["publisher"]] %>% map(function(x) return(list(label=x, value=x)))
   ),
   multi=TRUE,
-  value=list(),
+  value=NULL,
 ),
 htmlBr(),
 htmlBr())))}
@@ -176,7 +176,7 @@ dbcCardBody(htmlDiv(
       "Select either categories, mechanics or publishers.\
       Then select different elements to view on the\
       following two figures."),
-    htmlIframe(id = "scatter")
+    dccGraph(id = "scatter", figure = list())
     )
   )
   )
@@ -313,8 +313,7 @@ app$callback(
        input("radio-dependent", "value")),
   function(column, list_) {
 
-    # p <- scatter_plot_dates(boardgame_data, column, list_)
-    p <- scatter_plot_dates(boardgame_data, column, unlist(list_))
+    p <- scatter_plot_dates(boardgame_data, column, list_)
     ggsave("cars.png")
     
     ggplotly(p)
@@ -393,5 +392,5 @@ return(list(string))})
 
 
 
-app$run_server(debug = F) 
+app$run_server(debug = T) 
 

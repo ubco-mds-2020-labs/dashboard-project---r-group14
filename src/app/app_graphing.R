@@ -1,7 +1,7 @@
 library(ggplot2)
 library(plotly)
 library(ggpubr)
-source("app_wrangling.R")
+source("./src/app/app_wrangling.R")
 
 scatter_plot_dates <- function(data, col="category", list_=c()) {
   # changes between no selection and selection
@@ -21,18 +21,18 @@ scatter_plot_dates <- function(data, col="category", list_=c()) {
     aes(x = year_published,
         y = average_rating,
         color = eval(parse(text = set_color))) +
-    geom_point(alpha = 0.4) +
-    labs(x = "",
-         y = "Average Rating",
-         color = "") +
-    ggtitle("Game Popularity Based on Published Year") 
-  scatter_plot <- ggplotly(scatter_plot, tooltip = c("average_rating")) %>%
-    layout(title = list(text = paste0("Game Popularity Based on Published Year",
-                                      "<br>",
-                                      "<sup>",
-                                      "Light grey line shows annual "+
-                                        "average rating of ALL games",
-                                      "</sup>")))
+    geom_point(alpha = 0.4) 
+  #   labs(x = "",
+  #        y = "Average Rating",
+  #        color = "") +
+  #   ggtitle("Game Popularity Based on Published Year") 
+  # scatter_plot <- ggplotly(scatter_plot, tooltip = c("average_rating")) %>%
+  #   layout(title = list(text = paste0("Game Popularity Based on Published Year",
+  #                                     "<br>",
+  #                                     "<sup>",
+  #                                     "Light grey line shows annual "+
+  #                                       "average rating of ALL games",
+  #                                     "</sup>")))
   return(scatter_plot)
 }
 count_plot_dates <- function(data, col="category", list_=c()) {

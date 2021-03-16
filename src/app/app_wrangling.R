@@ -184,7 +184,7 @@ subset_data <- function(data, col_ = "category") {
         unique() %>%
         na.omit()
     
-    return(unique_out)
+    return(list(unique_out))
 }
 
 
