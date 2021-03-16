@@ -9,7 +9,6 @@ library(dashTable)
 source("./app/app_wrangling.R")
 source("./app/app_graphing.R")
 
-
 # * WRANGLING - load board game data here
 boardgame_data <- call_boardgame_data()
 
