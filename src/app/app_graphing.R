@@ -19,8 +19,9 @@ scatter_plot_dates <- function(data, col="category", list_=c()) {
   scatter_plot <- set_data %>%
     ggplot() +
     aes(x = year_published,
-        y = average_rating,
-        color = eval(parse(text = set_color))) +
+        y = average_rating) +
+        # color = eval(parse(text = set_color))) +
+        
     geom_point(alpha = 0.4) 
   #   labs(x = "",
   #        y = "Average Rating",
@@ -33,7 +34,7 @@ scatter_plot_dates <- function(data, col="category", list_=c()) {
   #                                     "Light grey line shows annual "+
   #                                       "average rating of ALL games",
   #                                     "</sup>")))
-  return(scatter_plot)
+  return(ggplotly(scatter_plot))
 }
 count_plot_dates <- function(data, col="category", list_=c()) {
   if (length(list_) == 0) {

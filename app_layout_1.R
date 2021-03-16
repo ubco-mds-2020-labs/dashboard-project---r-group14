@@ -176,7 +176,7 @@ dbcCardBody(htmlDiv(
       "Select either categories, mechanics or publishers.\
       Then select different elements to view on the\
       following two figures."),
-    htmlIframe(id = "scatter")
+    dccGraph(id = "scatter")
     )
   )
   )
@@ -308,7 +308,7 @@ app$callback(
 
 # scatter plot tab 1
 app$callback(
-  list(output("scatter", "figure")),
+  output = list(id ="scatter", property = "figure"),
   list(input("radio-selection", "value"),
        input("radio-dependent", "value")),
   function(column, list_) {
@@ -317,7 +317,7 @@ app$callback(
     p <- scatter_plot_dates(boardgame_data, column, unlist(list_))
     ggsave("cars.png")
     
-    ggplotly(p)
+    return(p)
     
   }
 )
