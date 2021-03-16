@@ -27,14 +27,15 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
     scale_fill_brewer(palette="Set2") +
     geom_point(aes(x = year_published,
                    y = average_rating,
+                   #fill = eval(parse(text = set_color)),
                    color = eval(parse(text = set_color))),
                alpha = 0.4) +
     geom_line(data=mean_data,
               aes(x = year_published,
-                  y = total_avg_rating,
-                  color = "#d3d3d3")) +
+                  y = total_avg_rating), color = "#d3d3d3") +
     labs(x = "",
          y = "Average Rating",
+         #fill = "",
          color = "") +
     ggtitle("Game Popularity Based on Published Year")  +
     theme_minimal()
@@ -109,7 +110,7 @@ top_n_plot <- function(data, cat=c(), mech=c(), pub=c(), n=10) {
   set_data <- call_boardgame_filter(data, cat, mech, pub, n)
   top_plot <- set_data %>%
     ggplot() +
-    scale_fill_brewer(palette = "Set2") +
+    scale_fill_brewer(palette = "Set3") +
     aes(x = name,
         y = average_rating,
         fill = name) +
@@ -119,8 +120,10 @@ top_n_plot <- function(data, cat=c(), mech=c(), pub=c(), n=10) {
          fill = "Boardgame Name") +
     ggtitle("Top 10 Games Based on User Selection") +
     theme(axis.text.x = element_blank(),
-          axis.ticks.x = element_blank() ) +
-    theme_minimal() +
+          axis.ticks.x = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(colour = "black"),
+          panel.grid.major = element_line(colour = "#d3d3d3")) +
     scale_y_continuous(expand = c(0, 0),
                        limits = c(0, 10))
 
