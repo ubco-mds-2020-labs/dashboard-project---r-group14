@@ -23,7 +23,7 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
         y = average_rating,
         color = eval(parse(text = set_color))) +
     geom_point(alpha = 0.4) +
-    labs(x = "",
+    labs(x = "", 
          y = "Average Rating",
          color = "") +
     ggtitle("Game Popularity Based on Published Year")
@@ -111,6 +111,7 @@ rank_plot_facet <- function(data, year_in, year_out) {
 
   return(total_plot)
 }
+
 top_n_plot <- function(data,
                        cat = c(),
                        mech = c(),
@@ -130,8 +131,8 @@ top_n_plot <- function(data,
     ggtitle("Top 10 Games Based on User Selection") +
     theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank()) +
-    scale_y_continuous(expand = c(0,0), 
-                       limits = c(0,10))
+    scale_y_continuous(expand = c(0, 0),
+                       limits = c(0, 10))
 
   return(ggplotly(top_plot))
 }
