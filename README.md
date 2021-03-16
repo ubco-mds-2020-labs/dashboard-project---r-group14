@@ -6,11 +6,17 @@
 
 **The Board Game Dashboard can be found [here](https://boardgame-dashboard-data551.herokuapp.com/)!**
 
+## Note
+
+Note that the purpose of this dashboard was to rewrite the Python Dashboard found [here](https://github.com/ubco-mds-2020-labs/dashboard-project-group14) into Dash-R. This has been completed within this repository.
+
+There is currently no plans to update this dashboard and instead the focus will be on updating the Python Dashboard. A list of planned updates for the Python Dashboard can be found [here](https://github.com/ubco-mds-2020-labs/dashboard-project-group14/issues).
+
 ## Description
 
 The Board Game Dashboard provides interactive exploration of a dataset of approximately 10,000 board games from the [Board Game Geek website](https://boardgamegeek.com/). The data includes board games with their descriptions, general game details, and user ratings and was obtained from the [R4DS TidyTuesday 2019-03-12 Github repository](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-12).
 
-The dashboard has following general functionality:
+The dashboard has the following general functionality:
 
 - Exploration of trends in board game features from 1950 to 2016.
 - Summary of most popular board game features and board games based on user selections of game category, mechanics, publisher, and/or published year.

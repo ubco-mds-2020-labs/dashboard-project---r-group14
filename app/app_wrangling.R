@@ -10,7 +10,7 @@ library(purrr)
 call_boardgame_data <- function() {
     
     # load data, this is relative to the root folder in the repository
-    filename <- "data/app_data/board_game.csv"
+    filename <- "./data/app_data/board_game.csv"
     boardgame_data <- read_csv(filename)
     
     # convert NA value to 'Unknown' for specific columns

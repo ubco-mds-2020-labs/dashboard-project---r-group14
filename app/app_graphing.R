@@ -1,7 +1,7 @@
 library(ggplot2)
 library(plotly)
 library(ggpubr)
-source("./src/app/app_wrangling.R")
+source("./app/app_wrangling.R")
 
 scatter_plot_dates <- function(data, col = "category", list_ = c()) {
   # changes between no selection and selection
