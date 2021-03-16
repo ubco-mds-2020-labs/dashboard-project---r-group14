@@ -308,17 +308,15 @@ app$callback(
 
 # scatter plot tab 1
 app$callback(
-  list(output("scatter", "figure")),
-  list(input("radio-selection", "value"),
-       input("radio-dependent", "value")),
-  function(column, list_) {
-
-    p <- scatter_plot_dates(boardgame_data, column, list_)
-    ggsave("cars.png")
-    
-    return(ggplotly(p))
-    
-  }
+    output = list(id ="scatter", property = "figure"),
+    list(input("radio-selection", "value"),
+         input("radio-dependent", "value")),
+    function(column, list_) {
+        # p <- scatter_plot_dates(boardgame_data, column, list_)
+        p <- scatter_plot_dates(boardgame_data, column, unlist(list_))
+        ggsave("cars.png")
+        return(p)
+    }
 )
 
 
