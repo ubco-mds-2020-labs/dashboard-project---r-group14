@@ -289,8 +289,7 @@ eight_card = dbcCard(
                    
                     style_data = list(
                         whiteSpace = "normal"
-                    ),
-                    style_cell=list('border'= '1px solid grey' )
+                    ), style_cell = list(maxWidth= '260px')
 ))))
 
 
