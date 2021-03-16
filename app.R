@@ -17,6 +17,45 @@ col_key_list <- c("category", "mechanic", "publisher")
 col_dict <- vector(mode = "list", length = 3)
 names(col_dict) <- col_key_list
 
+# * WRANGLING - sets up column names for second tab
+col_ids <- c(
+  "name",
+  "min_players",
+  "max_players",
+  "min_playtime",
+  "max_playtime",
+  "year_published",
+  "category",
+  "mechanic",
+  "designer",
+  "publisher",
+  "average_rating",
+  "users_rated"
+)
+col_names <- c(
+  "Name",
+  "Min Players",
+  "Max Players",
+  "Min Playtime",
+  "Max Playtime",
+  "Year Published",
+  "Category",
+  "Mechanic",
+  "Designer",
+  "Publisher",
+  "Average game rating",
+  "Users Rated"
+)
+name_id_join <- function(x, y){
+  return(list(name=x, id=y))
+}
+col_named_list <- map2(.x = col_names, .y = col_ids, .f = name_id_join)
+
+# * WRANGLING - sets up years for the slider
+years <- seq(1950, 2015, 5) %>% map(toString)
+print(years)
+stop()
+
 for (idx in 1:3) {
   col_dict[[idx]] <- subset_data(boardgame_data, col_key_list[idx])[[1]]
 }
@@ -224,56 +263,7 @@ eight_card = dbcCard(
     list(
       htmlH5("Top 10 Games Facts Table:"),
       dashDataTable(id="top_n_games_datatable",     
-                    columns = list(
-                      list(
-                        name = 'name',
-                        id = 'name'
-                      ),
-                      list(
-                        name = 'min_players',
-                        id = 'min_players'
-                      ),
-                      list(
-                        name = 'max_players',
-                        id = 'max_players'
-                      ),
-                      list(
-                        name = 'min_playtime',
-                        id = 'min_playtime'
-                      ),
-                      list(
-                        name = 'max_playtime',
-                        id = 'max_playtime'
-                      ),
-                      list(
-                        name = 'year_published',
-                        id = 'year_published'
-                      ),
-                      list(
-                        name = 'category',
-                        id = 'category'
-                      ),
-                      list(
-                        name = 'mechanic',
-                        id = 'mechanic'
-                      ),
-                      list(
-                        name = 'designer',
-                        id = 'designer'
-                      ),
-                      list(
-                        name = 'publisher',
-                        id = 'publisher'
-                      ),
-                      list(
-                        name = 'average_rating',
-                        id = 'average_rating'
-                      ),
-                      list(
-                        name = 'users_rated',
-                        id = 'users_rated'
-                      )
-                    )
+                    columns = col_named_list
 ))))
 
 # card 9 for data set description tab 1
@@ -439,56 +429,7 @@ app$callback(
              "category", "mechanic",
              "designer", "publisher",
              "average_rating", "users_rated")]
-    columns <- list(
-      list(
-        name = 'name',
-        id = 'name'
-      ),
-      list(
-        name = 'min_players',
-        id = 'min_players'
-      ),
-      list(
-        name = 'max_players',
-        id = 'max_players'
-      ),
-      list(
-        name = 'min_playtime',
-        id = 'min_playtime'
-      ),
-      list(
-        name = 'max_playtime',
-        id = 'max_playtime'
-      ),
-      list(
-        name = 'year_published',
-        id = 'year_published'
-      ),
-      list(
-        name = 'category',
-        id = 'category'
-      ),
-      list(
-        name = 'mechanic',
-        id = 'mechanic'
-      ),
-      list(
-        name = 'designer',
-        id = 'designer'
-      ),
-      list(
-        name = 'publisher',
-        id = 'publisher'
-      ),
-      list(
-        name = 'average_rating',
-        id = 'average_rating'
-      ),
-      list(
-        name = 'users_rated',
-        id = 'users_rated'
-      )
-    )
+    columns <- col_named_list
     return(list(t, columns))
   }
 )
