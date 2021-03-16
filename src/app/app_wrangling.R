@@ -8,11 +8,11 @@ library(purrr)
 # fills select na values
 # creates list rom strings for mechanic, category, publisher
 call_boardgame_data <- function() {
-
+    
     # load data, this is relative to the root folder in the repository
     filename <- "data/app_data/board_game.csv"
     boardgame_data <- read_csv(filename)
-
+    
     # convert NA value to 'Unknown' for specific columns
     repl_val <- "Unknown"
     # regex RYAN TO REPLACE WITH CORRECT REGEX HERE
@@ -25,19 +25,19 @@ call_boardgame_data <- function() {
                mechanic = strsplit(mechanic, reg_use),
                publisher = strsplit(publisher, reg_use)) %>%
         select(-X1)
-
+    
     return(boardgame_data)
 }
 
 # Filters the dataframe and returns the top n
 call_boardgame_filter <- function(data, cat, mech, pub, n = NULL) {
     func_df_out <- data
-
+    
     # check each category
     cat_check <- call_bool_series_and(data, "category", cat)
     mech_check <- call_bool_series_and(data, "mechanic", mech)
     publ_check <- call_bool_series_and(data, "publisher", pub)
-
+    
     # remove rows from df that aren't matched
     func_df_out <- func_df_out %>%
         mutate(cat_check, mech_check, publ_check) %>%
@@ -45,12 +45,12 @@ call_boardgame_filter <- function(data, cat, mech, pub, n = NULL) {
         select(-cat_check, -mech_check, -publ_check) %>%
         # sort by average rating
         arrange(desc(average_rating))
-
+    
     # return number of entries is specified by user
     if (!is.null(n)) {
         func_df_out <- slice_head(func_df_out, n = n)
     }
-
+    
     return(func_df_out)
 }
 
@@ -64,12 +64,12 @@ check_list <- function(col_data, list_) {
 
 # function which checks if conditions are met for all requirements
 call_bool_series_and <- function(data, col_, list_) {
-
+    
     # check if all of the values contain the user input list
     check <- check_list(data[[col_]], list_) %>%
         map(~all(.)) %>%
         unlist()
-
+    
     # if there are no TRUE values in the entire list, switch all values to TRUE
     if (sum(check) == 0) check <- !check
     return(check)
@@ -78,12 +78,12 @@ call_bool_series_and <- function(data, col_, list_) {
 
 # function which checks if one condition is met from requirements
 call_bool_series_or <- function(data, col_, list_) {
-
+    
     # check if one of the values matches the user input list
     check <- check_list(data[[col_]], list_) %>%
         map(~any(.)) %>%
         unlist()
-
+    
     return(check)
 }
 
@@ -95,17 +95,9 @@ call_boardgame_radio <- function(data, col_, list_) {
     func_df_out <- func_df_out[call_bool_series_or(data, col_, list_), ]
     # call form group to add group column
     func_df_out <- form_group(func_df_out, col_, list_)
-    print("inside call_boardgame_radio")
     # remove all entries that aren't part of a group
-<<<<<<< HEAD
-    fucn_df_out <- filter(func_df_out, !is.na(group))
-    
-    print(head(func_df_out[, c("name", "group")], 10))
-    return(fucn_df_out)
-=======
     func_df_out <- filter(func_df_out, !is.na(group))
     return(func_df_out)
->>>>>>> 1b1ddf2ee8a4d5d9ff196b871a0cfd0c283b9d66
 }
 
 
@@ -120,36 +112,35 @@ form_group_helper <- function(data, list_) {
     else {
         return(list_[data])
     }
-
+    
 }
 
 
 # form groupings based on user selection from `call_boardgame_radio`
 form_group <- function(data, col_, list_) {
-    print("this is the list")
-    print(list_)
+    
     # check if values contain the user input
     check <- check_list(data[[col_]], list_)
-
+    
     # assign correct value
     output <- map(check, ~ (form_group_helper(.x, list_)))
-
+    
     # add new column to dataframe
     func_df_out <- data %>%
         mutate(group = output)
-
+    
     return(func_df_out)
 }
 
 
 # provides group counts after `call_boardgame_radio()` is used
 count_group <- function(data) {
-
+    
     # create dataframe with counts for each category
     func_df_out <- data %>%
         count(year_published, group) %>%
         pivot_wider(names_from = group, values_from = n)
-
+    
     # if `All Selected` exists, add counts to other categories
     if ("All Selected" %in% names(func_df_out)) {
         # remove na values from `All Selected`
@@ -164,7 +155,7 @@ count_group <- function(data) {
                    `All Selected` = func_df_out$`All Selected`) %>%
             select(year_published, everything())
     }
-
+    
     return(func_df_out)
 }
 
@@ -179,7 +170,7 @@ call_boardgame_top <- function(data, col_, year_in, year_out) {
         summarize(average = mean(average_rating)) %>%
         arrange(desc(average)) %>%
         slice_head(n = 5)
-
+    
     return(func_df_out)
 }
 
@@ -187,13 +178,13 @@ call_boardgame_top <- function(data, col_, year_in, year_out) {
 # return unique values to populate dropdowns
 subset_data <- function(data, col_ = "category") {
     func_df_out <- data %>% unnest(.data[[col_]])
-
+    
     unique_out <- map(func_df_out[[col_]], ~ (unlist(.x))) %>%
         unlist() %>%
         unique() %>%
         na.omit()
-
-    return(list(unique_out))
+    
+    return(unique_out)
 }
 
 
@@ -204,7 +195,7 @@ remove_columns <- function(data) {
         year_published,
         average_rating,
     )
-
+    
     if ("group" %in% names(data)) {
         reduced_data <- mutate(reduced_data, group = data[["group"]])
     }
