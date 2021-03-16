@@ -101,7 +101,7 @@ rank_plot_facet <- function(data, year_in, year_out) {
                               "publisher",
                               year_in,
                               year_out,
-                              color_=  "#e377c2")
+                              color_ =  "#e377c2")
 
   total_plot <- subplot(cat_plot,
                         mech_plot,
@@ -120,17 +120,17 @@ top_n_plot <- function(data,
 
   top_plot <- set_data %>%
     ggplot() +
-    aes(x=name,
-        y=average_rating,
-        fill=name) +
+    aes(x = name,
+        y = average_rating,
+        fill = name) +
     geom_col() +
     labs(x = "",
          y = "Average Rating",
          fill = "Boardgame Name") +
     ggtitle("Top 10 Games Based on User Selection") +
     theme(axis.text.x = element_blank(),
-          axis.ticks.x = element_blank() ) +
-    scale_y_continuous(expand = c(0,0),
+          axis.ticks.x = element_blank()) +
+    scale_y_continuous(expand = c(0,0), 
                        limits = c(0,10))
 
   return(ggplotly(top_plot))
