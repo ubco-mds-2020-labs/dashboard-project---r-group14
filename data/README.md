@@ -2,7 +2,7 @@
 
 ## app_data
 
-Contains the data used by the app (called using the function in `src\app\app_wrangling.py`).
+Contains the data used by the app (called using the function in `app.R`).
 
 ## raw
 

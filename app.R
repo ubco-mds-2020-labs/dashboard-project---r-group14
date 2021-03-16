@@ -5,11 +5,10 @@ library(dash)
 library(dashHtmlComponents)
 library(dashCoreComponents)
 library(dashBootstrapComponents)
-library(ggplot2)
-library(plotly)
-source("./src/app/app_wrangling.R")
-source("./src/app/app_graphing.R")
 library(dashTable)
+source("./app/app_wrangling.R")
+source("./app/app_graphing.R")
+
 
 # * WRANGLING - load board game data here
 boardgame_data <- call_boardgame_data()
