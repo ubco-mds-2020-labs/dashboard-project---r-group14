@@ -124,7 +124,7 @@ form_group <- function(data, col_, list_) {
     
     # assign correct value
     output <- map(check, ~ (form_group_helper(.x, list_)))
-    
+
     # add new column to dataframe
     func_df_out <- data %>%
         mutate(group = output)
