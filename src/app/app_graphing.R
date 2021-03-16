@@ -18,22 +18,22 @@ scatter_plot_dates <- function(data, col="category", list_=c()) {
   # scatter plot
   scatter_plot <- set_data %>%
     ggplot() +
-    #scale_fill_brewer(palette="Set2") +
+    scale_fill_brewer(palette="Set2") +
     aes(x = year_published,
         y = average_rating,
         color = eval(parse(text = set_color))) +
-       geom_point(alpha = 0.4) 
-  #   labs(x = "",
-  #        y = "Average Rating",
-  #        color = "") +
-  #   ggtitle("Game Popularity Based on Published Year") 
-  # scatter_plot <- ggplotly(scatter_plot, tooltip = c("average_rating")) %>%
-  #   layout(title = list(text = paste0("Game Popularity Based on Published Year",
-  #                                     "<br>",
-  #                                     "<sup>",
-  #                                     "Light grey line shows annual "+
-  #                                       "average rating of ALL games",
-  #                                     "</sup>")))
+       geom_point(alpha = 0.4) +
+   labs(x = "",
+    y = "Average Rating",
+   color = "") +
+  ggtitle("Game Popularity Based on Published Year") 
+ # scatter_plot <- ggplotly(scatter_plot, tooltip = c("average_rating")) %>%
+ #layout(title = list(text = paste0("Game Popularity Based on Published Year",
+                                      #"<br>",
+                                      #"<sup>",
+                                     #"Light grey line shows annual "+
+                                     #   "average rating of ALL games",
+                                     # "</sup>")))
   return(ggplotly(scatter_plot))
 }
 count_plot_dates <- function(data, col="category", list_=c()) {
@@ -52,11 +52,10 @@ count_plot_dates <- function(data, col="category", list_=c()) {
     ggplot() +
     aes(x = year_published,
         fill = eval(parse(text = set_color))) +
-    geom_bar() 
-   #+ labs(x = "",
-         #y = "# of Games Published",
-         #fill = "",
-         #title = "Game Count based on Published Year") +
+    geom_bar() +
+    labs(x = "",
+         y = "# of Games Published",
+         title = "Game Count based on Published Year") 
     #scale_y_continuous(expand = c(0, 0),
                        #limits = c(0, NA))
   #count_plot <- ggplotly(count_plot, tooltip = c("y"))

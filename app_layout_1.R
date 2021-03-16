@@ -210,6 +210,8 @@ marks = list(
 "2015"= "2015"),value = list(1990,2010)),dccGraph(id='facet_1')))
               
 )))
+
+
     
   
 
@@ -343,12 +345,12 @@ app$callback(
 
 app$callback(
     output = list(id ="facet_1", property = "figure"),
-    params=list(input(id="output-container-range-slider", property="value")),
+    params=list(input(id="non-linear-range-slider", property="value")),
         
     function(value) {
   
-    val1 = as.numeric(unlist(value[1]))
-    val2 = as.numeric(unlist(value[2]))
+    val1 = as.numeric(value[1])
+    val2 = as.numeric(value[2])
     p3 <- rank_plot_facet(boardgame_data, val1, val2)
    
     return(p3)
@@ -361,11 +363,11 @@ app$callback(
 
 app$callback(
     output = list(id ="facet_2", property = "figure"),
-    params=list(input(id="output-container-range-slider2", property="value")),
+    params=list(input(id="non-linear-range-slider2", property="value")),
     
     function(value){
-        val1 = as.numeric(unlist(value[1]))
-        val2 = as.numeric(unlist(value[2]))
+        val1 = as.numeric(value[1])
+        val2 = as.numeric(value[2])
         p4 <- rank_plot_facet(boardgame_data, val1, val2)
         return(p4)
         
