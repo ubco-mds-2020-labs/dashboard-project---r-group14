@@ -3,6 +3,8 @@ library(plotly)
 library(ggpubr)
 source("./app/app_wrangling.R")
 
+
+# scatter plot function for top figure on tab 1
 scatter_plot_dates <- function(data, col = "category", list_ = c()) {
   # mean line data
   mean_data <- mean_line(data)
@@ -18,7 +20,6 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
       remove_columns()
     set_color <- "group"
   }
-
 
   # scatter plot
   scatter_plot <- set_data %>%
@@ -47,12 +48,13 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
     theme_minimal()
 
   scatter_plot <- ggplotly(scatter_plot, tooltip = c("y")) %>%
-    layout(height = 375)
+    layout(height = 300, width = 1200)
 
   return(scatter_plot)
 }
 
 
+# stacked histogram figure for tab 1
 count_plot_dates <- function(data, col = "category", list_ = c()) {
   if (length(list_) == 0) {
     set_data <- data %>%
@@ -64,7 +66,6 @@ count_plot_dates <- function(data, col = "category", list_ = c()) {
       remove_columns()
     set_color <- "group"
   }
-
 
   # count plot
   count_plot <- set_data %>%
@@ -86,11 +87,13 @@ count_plot_dates <- function(data, col = "category", list_ = c()) {
     ) +
     theme_minimal()
 
-  count_plot <- ggplotly(count_plot, tooltip = c("y")) %>% layout(height = 375)
+  count_plot <- ggplotly(count_plot, tooltip = c("y")) %>%
+    layout(height = 300, width = 1200)
   return(count_plot)
 }
 
 
+# generates top 5 histograms based on a year selection
 rank_plot_dates <- function(data, col = "category", year_in = 1990,
                             year_out = 2010, color_) {
 
@@ -114,6 +117,9 @@ rank_plot_dates <- function(data, col = "category", year_in = 1990,
 }
 
 
+# generate series of histograms for tab 1
+# one for category, mechanic, publishing
+# wrapper for multiple calls to rank_plot_dates()
 rank_plot_facet <- function(data, year_in, year_out) {
   cat_plot <- rank_plot_dates(data, "category", year_in, year_out,
                               color_ = "#ff7f0e")
@@ -129,6 +135,8 @@ rank_plot_facet <- function(data, year_in, year_out) {
 }
 
 
+# generates histogram for tab 2 of top n boardgames
+# based on user selection
 top_n_plot <- function(data, cat = c(), mech = c(), pub = c(), n = 10) {
   set_data <- call_boardgame_filter(data, cat, mech, pub, n)
   top_plot <- set_data %>%
