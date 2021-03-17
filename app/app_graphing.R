@@ -22,6 +22,7 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
   }
 
   # scatter plot
+  options(repr.plot.width=4, repr.plot.height=4)
   scatter_plot <- set_data %>%
     ggplot() +
     scale_fill_brewer(palette = "Set2") +
@@ -48,7 +49,7 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
     theme_minimal()
 
   scatter_plot <- ggplotly(scatter_plot, tooltip = c("y")) %>%
-    layout(height = 375)
+    layout(height = 300, width = 1200)
 
   return(scatter_plot)
 }
@@ -87,7 +88,8 @@ count_plot_dates <- function(data, col = "category", list_ = c()) {
     ) +
     theme_minimal()
 
-  count_plot <- ggplotly(count_plot, tooltip = c("y")) %>% layout(height = 375)
+  count_plot <- ggplotly(count_plot, tooltip = c("y")) %>%
+    layout(height = 300, width = 1200)
   return(count_plot)
 }
 
