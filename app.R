@@ -92,9 +92,9 @@ generate_control_card <- function() {
       dccRadioItems(
         id = "radio-selection",
         options = list(
-          list(label = "Categories", value = "category"),
-          list(label = "Mechanics", value = "mechanic"),
-          list(label = "Publishers", value = "publisher")
+          list(label = " Categories", value = "category"),
+          list(label = " Mechanics", value = "mechanic"),
+          list(label = " Publishers", value = "publisher")
         ),
         value = "mechanic", labelStyle = list("display" = "block")
       ),

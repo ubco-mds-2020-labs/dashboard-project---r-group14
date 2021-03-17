@@ -76,7 +76,7 @@ count_plot_dates <- function(data, col = "category", list_ = c()) {
     geom_bar() +
     labs(
       x = "",
-      y = "# of Games Published",
+      y = "Count of Games Published",
       fill = "",
       title = "Game Count based on Published Year"
     ) +
