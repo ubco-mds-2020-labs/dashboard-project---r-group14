@@ -201,3 +201,18 @@ remove_columns <- function(data) {
     }
     return(reduced_data)
 }
+
+
+# used to create an aggregate data frame of average review rating
+mean_line <- function(data) {
+    reduced_data <- data %>% select(
+        year_published,
+        average_rating,
+    )
+
+    reduced_data <- reduced_data %>%
+        aggregate(list(reduced_data$year_published), mean) %>%
+        rename(total_avg_rating = average_rating)
+    
+    return(reduced_data)
+}

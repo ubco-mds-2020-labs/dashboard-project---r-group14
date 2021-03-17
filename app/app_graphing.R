@@ -4,6 +4,9 @@ library(ggpubr)
 source("./app/app_wrangling.R")
 
 scatter_plot_dates <- function(data, col = "category", list_ = c()) {
+  #mean line data
+  mean_data <- mean_line(data)
+
   # changes between no selection and selection
   if (length(list_) == 0) {
     set_data <- data %>%
@@ -22,12 +25,17 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
   scatter_plot <- set_data %>%
     ggplot() +
     scale_fill_brewer(palette="Set2") +
-    aes(x = year_published,
-        y = average_rating,
-        color = eval(parse(text = set_color))) +
-        geom_point(alpha = 0.4) +
+    geom_point(aes(x = year_published,
+                   y = average_rating,
+                   #fill = eval(parse(text = set_color)),
+                   color = eval(parse(text = set_color))),
+               alpha = 0.4) +
+    geom_line(data=mean_data,
+              aes(x = year_published,
+                  y = total_avg_rating), color = "#d3d3d3") +
     labs(x = "",
          y = "Average Rating",
+         #fill = "",
          color = "") +
     ggtitle("Game Popularity Based on Published Year")  +
     theme_minimal()
@@ -79,7 +87,7 @@ rank_plot_dates <- function(data, col="category", year_in=1990, year_out=2010, c
         y=eval(parse(text=col))) +
     labs(x="Average Rating",
          y=col) +
-    coord_cartesian(xlim=c(5,10)) +
+    coord_cartesian(xlim = c(5, 10)) +
     geom_col(fill = color_) +
     theme_minimal()
 
@@ -102,18 +110,22 @@ top_n_plot <- function(data, cat=c(), mech=c(), pub=c(), n=10) {
   set_data <- call_boardgame_filter(data, cat, mech, pub, n)
   top_plot <- set_data %>%
     ggplot() +
+    scale_fill_brewer(palette = "Set3") +
     aes(x = name,
         y = average_rating,
         fill = name) +
     geom_col() +
     labs(x = "",
-         y="Average Rating",
-         fill="Boardgame Name") +
+         y = "Average Rating",
+         fill = "Boardgame Name") +
     ggtitle("Top 10 Games Based on User Selection") +
     theme(axis.text.x = element_blank(),
-          axis.ticks.x = element_blank() ) +
-    scale_y_continuous(expand = c(0,0),
-                       limits = c(0,10))
+          axis.ticks.x = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(colour = "black"),
+          panel.grid.major = element_line(colour = "#d3d3d3")) +
+    scale_y_continuous(expand = c(0, 0),
+                       limits = c(0, 10))
 
   return(ggplotly(top_plot))
 }
