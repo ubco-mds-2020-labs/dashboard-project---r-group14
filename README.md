@@ -8,9 +8,9 @@
 
 ## Note
 
-Note that the purpose of this dashboard was to rewrite the Python Dashboard found [here](https://github.com/ubco-mds-2020-labs/dashboard-project-group14) into Dash-R. This has been completed within this repository.
+Note that the purpose of this dashboard is to rewrite the Milestone 2 Python Dashboard found [here](https://github.com/ubco-mds-2020-labs/dashboard-project-group14/releases/tag/v0.1.1) into Dash-R. This has been completed within this repository.
 
-There is currently no plans to update this dashboard and instead the focus will be on updating the Python Dashboard. A list of planned updates for the Python Dashboard can be found [here](https://github.com/ubco-mds-2020-labs/dashboard-project-group14/issues).
+There are currently no plans to update this dashboard and instead the focus will be on updating the Python Dashboard. A list of planned updates for the Python Dashboard can be found [here](https://github.com/ubco-mds-2020-labs/dashboard-project-group14/issues).
 
 ## Description
 
@@ -27,7 +27,7 @@ An exploratory data analysis was also prepared prior to the dashboard and can be
 
 ## Status
 
-The dashboard is currently under active development and will soon include the following updates (stay tuned!):
+The dashboard is currently under active development and will soon include the following updates within the Python Dashboard (stay tuned!):
 
 - Improved layout and aesthetics
 - Revised game count vs published year bar chart

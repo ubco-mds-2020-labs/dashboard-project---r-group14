@@ -20,5 +20,4 @@ Our Team has decided to move forward with the Python Dashboard in Milestone 4. W
 
 - We feel that Dash in Python is a bit more polished than Dash-R based on the issues we ran into trying to get the R dashboard to work.
 - The enhancements we started on in Milestone 2 are all written in Python and it would take additional effort to translate the enhancements to R.
-
-The one benefit of our dashboard in R is that it is currently a little more responsive than the dashboard in Python. This is likely due to the difference in the ggplot and Altair packages; however, we have solutions such as reducing the data sent to the Altair plots and minimizing any calculations completed by Altair that we expect will increase the performance of the Python Dashboard.
+- The responsiveness of the dashboards appears comparable but we have solutions that may speed up the Python dashboard including reducing the data sent to the Altair plots and minimizing any calculations completed by Altair.
