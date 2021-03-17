@@ -204,9 +204,6 @@ marks = years,value = list(1990,2010)),dccGraph(id='facet_1')))
 )))
 
 
-    
-  
-
 # card 5 containing the top slider and second faceted bar chart
 fifth_card = dbcCard(dbcCardBody(list(htmlDiv(
 list(htmlDiv(id="output-container-range-slider2"),
