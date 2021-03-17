@@ -1,6 +1,5 @@
 # load packages
 # Installs dash bootstrap
-library(devtools)
 library(dash)
 library(dashHtmlComponents)
 library(dashCoreComponents)
