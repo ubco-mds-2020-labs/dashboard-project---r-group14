@@ -53,13 +53,12 @@ col_named_list <- map2(.x = col_names, .y = col_ids, .f = name_id_join)
 
 # * WRANGLING - sets up years for the slider
 years <- seq(1950, 2015, 5) %>% map(toString)
-year_marks <- years %>% map(function(x) return(list(x = x)))
-print(year_marks)
+names(years) <- years
 
+# creates a dictionary of group (eg mechanic) to all the elements in that group
 for (idx in 1:3) {
   col_dict[[idx]] <- subset_data(boardgame_data, col_key_list[idx])[[1]]
 }
-
 
 # title for entire dashboard
 title <- function() {
@@ -200,21 +199,7 @@ dbcCol(id="bottom left row",className="four columns",list(lower_description())))
 fourth_card = dbcCard(
 dbcCardBody(list(htmlDiv(list(htmlDiv(id='output-container-range-slider'),
 dccRangeSlider(id='non-linear-range-slider',min = 1950,max = 2016,step=1,
-marks = list(
-"1950"= "1950",
-"1955"= "1955",
-"1960"= "1960",
-"1965"= "1965",
-"1970"= "1970",
-"1975"= "1975",
-"1980"= "1980",
-"1985"="1985",
-"1990"= "1990",
-"1995"="1995",
-"2000"="2000",
-"2005"="2005",
-"2010" ="2010",
-"2015"= "2015"),value = list(1990,2010)),dccGraph(id='facet_1')))
+marks = years,value = list(1990,2010)),dccGraph(id='facet_1')))
               
 )))
 
@@ -227,23 +212,8 @@ fifth_card = dbcCard(dbcCardBody(list(htmlDiv(
 list(htmlDiv(id="output-container-range-slider2"),
 dccRangeSlider(
 id="non-linear-range-slider2",min = 1950,max = 2016,step=1,
-marks = list(
-"1950"= "1950",
-"1955"= "1955",
-"1960"= "1960",
-"1965"= "1965",
-"1970"= "1970",
-"1975"= "1975",
-"1980"= "1980",
-"1985"="1985",
-"1990"= "1990",
-"1995"="1995",
-"2000"="2000",
-"2005"="2005",
-"2010" ="2010",
-"2015"= "2015"),value = list(1990,2010))))
-    
-,  dccGraph(id='facet_2'))))
+marks = years,value = list(1990,2010))))
+,dccGraph(id='facet_2'))))
 
 # card 6 containing the control card for tab 2
 sixth_card = dbcCard(dbcCardBody(list(generate_control_card_tab2())))
