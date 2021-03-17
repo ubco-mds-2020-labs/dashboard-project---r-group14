@@ -92,7 +92,7 @@ dccRadioItems(
     list(label = "Mechanics", value = "mechanic"),
     list(label = "Publishers", value = "publisher")
   ),
-  value="mechanic"
+  value="mechanic", labelStyle = list("display" = "block")
 ),
 htmlBr(),
 htmlLabel("Select elements to view:"),
@@ -172,7 +172,16 @@ published between 1950 and 2021."))))}
 first_card = dbcCard(
 dbcCardBody(
 htmlDiv(id="left-column",
-className="four columns",list(description_card(),htmlBr(),generate_control_card()))))
+className="four columns",list(description_card(),htmlBr(),
+generate_control_card(),
+htmlBr(),
+htmlBr(),
+htmlBr(),
+data_set_description(),
+htmlBr(),
+htmlBr()
+
+))))
 
 second_card = dbcCard(
 dbcCardBody(htmlDiv(
@@ -217,9 +226,7 @@ sixth_card = dbcCard(dbcCardBody(list(generate_control_card_tab2())))
 
 seventh_card = dbcCard(
   dbcCardBody(
-    list(
-      htmlDiv("Plot for top 10 games goes here"),
-      dccGraph(id="top_n_games")
+    list(dccGraph(id="top_n_games")
     )
   )
 )
@@ -230,12 +237,16 @@ eight_card = dbcCard(
     list(
       htmlH5("Top 10 Games Facts Table:"),
       dashDataTable(id="top_n_games_datatable",     
-                    columns = col_named_list
-))))
+                    columns = col_named_list,
+                    style_table=list("overflowY"= "scroll", "overflowX"= "scroll"),
+                    sort_action="native",
+                    
+                    style_data = list(
+                        whiteSpace = "normal"
+                    ), style_cell = list(maxWidth= '260px')
+                    
+                    ))))
 
-# card 9 for data set description tab 1
-ninth_card = dbcCard(
-dbcCardBody(htmlDiv(data_set_description())))
 
 # tab styling features for layout
 tabs_styles = list("height"= "44px")
@@ -256,9 +267,24 @@ tab_selected_style = list(
 app <- Dash$new(external_stylesheets = dbcThemes$BOOTSTRAP)
 
 # layout made up of cards
-app$layout(htmlDiv(list(dbcContainer(htmlDiv(id="title_top",className="title on top", list(title()))), htmlDiv(dccTabs(id="tabs_in_app", value="tab-1"
-,list(dccTab(label="Game Dynamics Over Time", value='tab-1',children=list(dbcRow(list(dbcCol(first_card, width=3), dbcCol(second_card, width=9))), dbcRow(list(dbcCol(third_card, width=3),dbcCol(list(fourth_card,fifth_card), width=9))), dbcRow(dbcCol(ninth_card, width=3))), style=tab_style,
-selected_style=tab_selected_style),dccTab(label="Top Games", value="tab-2",children=list(dbcRow(list(dbcCol(sixth_card, width=3), dbcCol(list(seventh_card,eight_card), width=9)))),style=tab_style,
+
+app$layout(htmlDiv(list(dbcContainer
+# add title
+(htmlDiv(id="title_top",className="title on top",
+list(title()))), 
+# make tabs
+htmlDiv(dccTabs(id="tabs_in_app", value="tab-1",list(
+# tab 1    
+dccTab(label="Game Dynamics Over Time", value='tab-1',
+children=list(dbcRow(list(dbcCol(first_card, width=3), 
+dbcCol(second_card, width=9))), dbcRow(list(dbcCol(third_card, width=3),
+dbcCol(list(fourth_card,fifth_card), width=9)))), 
+style=tab_style,selected_style=tab_selected_style),
+# tab 2
+dccTab(label="Top Games", value="tab-2",
+children=list(dbcRow(list(dbcCol(sixth_card, width=3),
+dbcCol(list(seventh_card,eight_card), width=9)))),
+style=tab_style,
 selected_style=tab_selected_style)))))))
   
   
