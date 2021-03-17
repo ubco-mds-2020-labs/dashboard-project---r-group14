@@ -118,7 +118,8 @@ generate_control_card_tab2 <- function() {
   return(htmlDiv(
     id = "control-card2",
     list(
-      htmlP("Please select any combination of categories, mechanics, publishers."),
+      htmlP("Please select any combination of categories, \
+      mechanics, publishers."),
       htmlBr(),
       htmlP("Please select categories:"),
       dccDropdown(
@@ -225,11 +226,11 @@ second_card <- dbcCard(
 )
 
 
-# card 3 containing the lower description 
+# card 3 containing the lower description
 # and collapsible data set description for tab 1
 third_card <- dbcCard(
   dbcCardBody(
-    dbcCol(id = "bottom left row", className = "four columns", 
+    dbcCol(id = "bottom left row", className = "four columns",
            list(lower_description()))
   )
 )
@@ -350,7 +351,7 @@ app$layout(htmlDiv(list(
 # app callbacks
 
 # radio button selection options to populate drop down
-# this will return something 
+# this will return something
 # like [{"label": c, "value": c} for c in col_dict[col]]
 app$callback(
   list(output("radio-dependent", "options")),

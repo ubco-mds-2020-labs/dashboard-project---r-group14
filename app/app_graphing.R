@@ -46,7 +46,7 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
     ggtitle("Game Popularity Based on Published Year") +
     theme_minimal()
 
-  scatter_plot <- ggplotly(scatter_plot, tooltip = c("y")) %>% 
+  scatter_plot <- ggplotly(scatter_plot, tooltip = c("y")) %>%
     layout(height = 375)
 
   return(scatter_plot)
@@ -91,7 +91,7 @@ count_plot_dates <- function(data, col = "category", list_ = c()) {
 }
 
 
-rank_plot_dates <- function(data, col = "category", year_in = 1990, 
+rank_plot_dates <- function(data, col = "category", year_in = 1990,
                             year_out = 2010, color_) {
 
   setdata <- call_boardgame_top(data, col, year_in, year_out)
@@ -115,14 +115,14 @@ rank_plot_dates <- function(data, col = "category", year_in = 1990,
 
 
 rank_plot_facet <- function(data, year_in, year_out) {
-  cat_plot <- rank_plot_dates(data, "category", year_in, year_out, 
+  cat_plot <- rank_plot_dates(data, "category", year_in, year_out,
                               color_ = "#ff7f0e")
-  mech_plot <- rank_plot_dates(data, "mechanic", year_in, year_out, 
+  mech_plot <- rank_plot_dates(data, "mechanic", year_in, year_out,
                                color_ = "#17becf")
-  pub_plot <- rank_plot_dates(data, "publisher", year_in, year_out, 
+  pub_plot <- rank_plot_dates(data, "publisher", year_in, year_out,
                               color_ = "#e377c2")
-  total_plot <- subplot(cat_plot, mech_plot, 
-                        pub_plot, nrows = 1, margin = 0.1) %>% 
+  total_plot <- subplot(cat_plot, mech_plot,
+                        pub_plot, nrows = 1, margin = 0.1) %>%
     layout(height = 250)
   
   return(total_plot)
