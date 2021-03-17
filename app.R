@@ -270,9 +270,7 @@ app$callback(
   list(output("radio-dependent", "options")),
   list(input("radio-selection", "value")),
   function(chosen_selection) {
-
     outlist <- list(lapply(col_dict[[chosen_selection]], function(x) return(list(label=x, value=x))))
-  
     return(outlist)
   }
 )
@@ -284,30 +282,19 @@ app$callback(
   list(input("radio-selection", "value"),
        input("radio-dependent", "value")),
   function(column, list_) {
-
-    
     p <- scatter_plot_dates(boardgame_data, column, unlist(list_))
-    
-    
     return(p)
-    
   }
 )
 
 # stacked histogram of counts annual published counts
-
 app$callback(
     output = list(id ="counts", property = "figure"),
     list(input("radio-selection", "value"),
          input("radio-dependent", "value")),
     function(column, list_) {
-        
-        
         p2 <- count_plot_dates(boardgame_data, column, unlist(list_))
-        
-        
         return(p2)
-        
     }
 )
 
@@ -317,15 +304,11 @@ app$callback(
 app$callback(
     output = list(id ="facet_1", property = "figure"),
     params=list(input(id="non-linear-range-slider", property="value")),
-        
     function(value) {
-  
     val1 = as.numeric(value[1])
     val2 = as.numeric(value[2])
     p3 <- rank_plot_facet(boardgame_data, val1, val2)
-   
     return(p3)
-        
     }
 )
 
@@ -335,13 +318,11 @@ app$callback(
 app$callback(
     output = list(id ="facet_2", property = "figure"),
     params=list(input(id="non-linear-range-slider2", property="value")),
-    
     function(value){
         val1 = as.numeric(value[1])
         val2 = as.numeric(value[2])
         p4 <- rank_plot_facet(boardgame_data, val1, val2)
         return(p4)
-        
     }
 )
 
