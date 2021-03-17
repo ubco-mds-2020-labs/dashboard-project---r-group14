@@ -14,6 +14,8 @@ The translation of the Python dashboard to R ended up being a fair amount of wor
 
 We ran into a few challenges with trying to get Dash-R to plot our graphs correctly which resulted in longer than expected troubleshooting but ultimately were able to get the Milestone 3 R dashboard at the same state as the Milestone 2 Python dashboard. We did not have time to work on the enhancements discussed in the previous `reflection-milestone2.md` document.
 
+The one issue we were unable to resolve is documented [here](https://github.com/ubco-mds-2020-labs/dashboard-project---r-group14/issues/19).
+
 ## Moving Forward
 
 Our Team has decided to move forward with the Python Dashboard in Milestone 4. We are making this decision for a couple of reasons:
