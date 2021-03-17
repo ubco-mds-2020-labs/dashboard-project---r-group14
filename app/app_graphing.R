@@ -124,7 +124,7 @@ rank_plot_facet <- function(data, year_in, year_out) {
   total_plot <- subplot(cat_plot, mech_plot,
                         pub_plot, nrows = 1, margin = 0.1) %>%
     layout(height = 250)
-  
+
   return(total_plot)
 }
 
