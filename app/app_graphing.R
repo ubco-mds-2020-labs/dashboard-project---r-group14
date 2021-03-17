@@ -22,7 +22,6 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
   }
 
   # scatter plot
-  options(repr.plot.width=4, repr.plot.height=4)
   scatter_plot <- set_data %>%
     ggplot() +
     scale_fill_brewer(palette = "Set2") +
