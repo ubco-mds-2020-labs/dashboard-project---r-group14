@@ -72,9 +72,10 @@ description_card <- function() {
       htmlH5("Welcome to our Board Games Dashboard"),
       htmlDiv(
         id = "intro",
-        list("Explore board game trends over time based on category, mechanics \
-                    and publisher selection below. Also visualize the top categories,\
-                    mechanics and publishers by year using our interactive features.")
+        list("Explore board game trends over time based on category, \
+        mechanics and publisher selection below. Also visualize the top \
+        categories, mechanics and publishers by year using our interactive \
+        features.")
       )
     )
   ))
@@ -106,7 +107,6 @@ generate_control_card <- function() {
         options = list(),
         multi = TRUE,
         value = list(),
-        # labelStyle=list("display"="block")
       )
     )
   ))
@@ -167,11 +167,11 @@ lower_description <- function() {
     list(
       htmlH4("Top 5 Categories, Mechanics and Publishers by Rating"),
       htmlP("Two sets of bar charts with year range sliders are provided \
-to allow comparison for two different periods.", ),
+            to allow comparison for two different periods.", ),
       htmlBr(),
       htmlP("Drag the year sliders below to select your year ranges and \
-compare the top 5 categories, mechanics and publishers \
-between time periods.")
+            compare the top 5 categories, mechanics and publishers \
+            between time periods.")
     )
   ))
 }
@@ -182,9 +182,9 @@ data_set_description <- function() {
     list(
       htmlH4("Description of Dataset"),
       htmlP(" This dataset comes from the Board Game Geek website and \
-includes boardgames with descriptions, general game \
-details, publisher, and user ratings for 10,000 boardgames\
-published between 1950 and 2021.")
+            includes boardgames with descriptions, general game \
+            details, publisher, and user ratings for 10,000 boardgames\
+            published between 1950 and 2021.")
     )
   ))
 }
@@ -215,8 +215,8 @@ second_card <- dbcCard(
       htmlH4("Board Game Ratings and Counts from 1950 to 2016"),
       htmlP(
         "Select either categories, mechanics or publishers.\
-      Then select different elements to view on the\
-      following two figures."
+        Then select different elements to view on the\
+        following two figures."
       ),
       dccGraph(id = "scatter"),
       dccGraph(id = "counts")
@@ -225,10 +225,12 @@ second_card <- dbcCard(
 )
 
 
-# card 3 containing the lower description and collapsible data set description for tab 1
+# card 3 containing the lower description 
+# and collapsible data set description for tab 1
 third_card <- dbcCard(
   dbcCardBody(
-    dbcCol(id = "bottom left row", className = "four columns", list(lower_description()))
+    dbcCol(id = "bottom left row", className = "four columns", 
+           list(lower_description()))
   )
 )
 
@@ -348,7 +350,8 @@ app$layout(htmlDiv(list(
 # app callbacks
 
 # radio button selection options to populate drop down
-# this will return something like [{"label": c, "value": c} for c in col_dict[col]]
+# this will return something 
+# like [{"label": c, "value": c} for c in col_dict[col]]
 app$callback(
   list(output("radio-dependent", "options")),
   list(input("radio-selection", "value")),
@@ -389,7 +392,6 @@ app$callback(
 
 
 # 1st facet chart
-
 app$callback(
   output = list(id = "facet_1", property = "figure"),
   params = list(input(id = "non-linear-range-slider", property = "value")),
@@ -403,7 +405,6 @@ app$callback(
 
 
 # 2nd facet chart
-
 app$callback(
   output = list(id = "facet_2", property = "figure"),
   params = list(input(id = "non-linear-range-slider2", property = "value")),
@@ -416,9 +417,7 @@ app$callback(
 )
 
 
-
 # 1st year range slider output tab 1
-
 app$callback(
   list(output("output-container-range-slider", "children")),
   list(input("non-linear-range-slider", "value")),
@@ -430,8 +429,8 @@ app$callback(
   }
 )
 
-# 2nd year range slider output tab 1
 
+# 2nd year range slider output tab 1
 app$callback(
   list(output("output-container-range-slider2", "children")),
   list(input("non-linear-range-slider2", "value")),
@@ -457,6 +456,7 @@ app$callback(
     return(p)
   }
 )
+
 
 # data table tab 2
 app$callback(

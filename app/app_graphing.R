@@ -27,7 +27,6 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
     geom_point(aes(
       x = year_published,
       y = average_rating,
-      # fill = eval(parse(text = set_color)),
       color = eval(parse(text = set_color))
     ),
     alpha = 0.4
@@ -42,13 +41,13 @@ scatter_plot_dates <- function(data, col = "category", list_ = c()) {
     labs(
       x = "",
       y = "Average Rating",
-      # fill = "",
       color = ""
     ) +
     ggtitle("Game Popularity Based on Published Year") +
     theme_minimal()
 
-  scatter_plot <- ggplotly(scatter_plot, tooltip = c("y")) %>% layout(height = 375)
+  scatter_plot <- ggplotly(scatter_plot, tooltip = c("y")) %>% 
+    layout(height = 375)
 
   return(scatter_plot)
 }
@@ -92,7 +91,9 @@ count_plot_dates <- function(data, col = "category", list_ = c()) {
 }
 
 
-rank_plot_dates <- function(data, col = "category", year_in = 1990, year_out = 2010, color_) {
+rank_plot_dates <- function(data, col = "category", year_in = 1990, 
+                            year_out = 2010, color_) {
+
   setdata <- call_boardgame_top(data, col, year_in, year_out)
   rank_plot <- setdata %>%
     ggplot() +
@@ -114,10 +115,16 @@ rank_plot_dates <- function(data, col = "category", year_in = 1990, year_out = 2
 
 
 rank_plot_facet <- function(data, year_in, year_out) {
-  cat_plot <- rank_plot_dates(data, "category", year_in, year_out, color_ = "#ff7f0e")
-  mech_plot <- rank_plot_dates(data, "mechanic", year_in, year_out, color_ = "#17becf")
-  pub_plot <- rank_plot_dates(data, "publisher", year_in, year_out, color_ = "#e377c2")
-  total_plot <- subplot(cat_plot, mech_plot, pub_plot, nrows = 1, margin = 0.1) %>% layout(height = 250)
+  cat_plot <- rank_plot_dates(data, "category", year_in, year_out, 
+                              color_ = "#ff7f0e")
+  mech_plot <- rank_plot_dates(data, "mechanic", year_in, year_out, 
+                               color_ = "#17becf")
+  pub_plot <- rank_plot_dates(data, "publisher", year_in, year_out, 
+                              color_ = "#e377c2")
+  total_plot <- subplot(cat_plot, mech_plot, 
+                        pub_plot, nrows = 1, margin = 0.1) %>% 
+    layout(height = 250)
+  
   return(total_plot)
 }
 
