@@ -17,10 +17,48 @@ col_key_list <- c("category", "mechanic", "publisher")
 col_dict <- vector(mode = "list", length = 3)
 names(col_dict) <- col_key_list
 
+# * WRANGLING - sets up column names for second tab
+col_ids <- c(
+  "name",
+  "min_players",
+  "max_players",
+  "min_playtime",
+  "max_playtime",
+  "year_published",
+  "category",
+  "mechanic",
+  "designer",
+  "publisher",
+  "average_rating",
+  "users_rated"
+)
+col_names <- c(
+  "Name",
+  "Min Players",
+  "Max Players",
+  "Min Playtime",
+  "Max Playtime",
+  "Year Published",
+  "Category",
+  "Mechanic",
+  "Designer",
+  "Publisher",
+  "Average game rating",
+  "Users Rated"
+)
+name_id_join <- function(x, y){
+  return(list(name=x, id=y))
+}
+col_named_list <- map2(.x = col_names, .y = col_ids, .f = name_id_join)
+
+# * WRANGLING - sets up years for the slider
+years <- seq(1950, 2015, 5) %>% map(toString)
+names(years) <- years
+
+# creates a dictionary of group (eg mechanic) to all the elements in that group
 for (idx in 1:3) {
   col_dict[[idx]] <- subset_data(boardgame_data, col_key_list[idx])[[1]]
 }
-
 
 # title for entire dashboard
 title <- function() {
@@ -161,50 +199,18 @@ dbcCol(id="bottom left row",className="four columns",list(lower_description())))
 fourth_card = dbcCard(
 dbcCardBody(list(htmlDiv(list(htmlDiv(id='output-container-range-slider'),
 dccRangeSlider(id='non-linear-range-slider',min = 1950,max = 2016,step=1,
-marks = list(
-"1950"= "1950",
-"1955"= "1955",
-"1960"= "1960",
-"1965"= "1965",
-"1970"= "1970",
-"1975"= "1975",
-"1980"= "1980",
-"1985"="1985",
-"1990"= "1990",
-"1995"="1995",
-"2000"="2000",
-"2005"="2005",
-"2010" ="2010",
-"2015"= "2015"),value = list(1990,2010)),dccGraph(id='facet_1')))
+marks = years,value = list(1990,2010)),dccGraph(id='facet_1')))
               
 )))
 
-
-    
-  
 
 # card 5 containing the top slider and second faceted bar chart
 fifth_card = dbcCard(dbcCardBody(list(htmlDiv(
 list(htmlDiv(id="output-container-range-slider2"),
 dccRangeSlider(
 id="non-linear-range-slider2",min = 1950,max = 2016,step=1,
-marks = list(
-"1950"= "1950",
-"1955"= "1955",
-"1960"= "1960",
-"1965"= "1965",
-"1970"= "1970",
-"1975"= "1975",
-"1980"= "1980",
-"1985"="1985",
-"1990"= "1990",
-"1995"="1995",
-"2000"="2000",
-"2005"="2005",
-"2010" ="2010",
-"2015"= "2015"),value = list(1990,2010))))
-    
-,  dccGraph(id='facet_2'))))
+marks = years,value = list(1990,2010))))
+,dccGraph(id='facet_2'))))
 
 # card 6 containing the control card for tab 2
 sixth_card = dbcCard(dbcCardBody(list(generate_control_card_tab2())))
@@ -224,56 +230,7 @@ eight_card = dbcCard(
     list(
       htmlH5("Top 10 Games Facts Table:"),
       dashDataTable(id="top_n_games_datatable",     
-                    columns = list(
-                      list(
-                        name = 'name',
-                        id = 'name'
-                      ),
-                      list(
-                        name = 'min_players',
-                        id = 'min_players'
-                      ),
-                      list(
-                        name = 'max_players',
-                        id = 'max_players'
-                      ),
-                      list(
-                        name = 'min_playtime',
-                        id = 'min_playtime'
-                      ),
-                      list(
-                        name = 'max_playtime',
-                        id = 'max_playtime'
-                      ),
-                      list(
-                        name = 'year_published',
-                        id = 'year_published'
-                      ),
-                      list(
-                        name = 'category',
-                        id = 'category'
-                      ),
-                      list(
-                        name = 'mechanic',
-                        id = 'mechanic'
-                      ),
-                      list(
-                        name = 'designer',
-                        id = 'designer'
-                      ),
-                      list(
-                        name = 'publisher',
-                        id = 'publisher'
-                      ),
-                      list(
-                        name = 'average_rating',
-                        id = 'average_rating'
-                      ),
-                      list(
-                        name = 'users_rated',
-                        id = 'users_rated'
-                      )
-                    )
+                    columns = col_named_list
 ))))
 
 # card 9 for data set description tab 1
@@ -313,9 +270,7 @@ app$callback(
   list(output("radio-dependent", "options")),
   list(input("radio-selection", "value")),
   function(chosen_selection) {
-
     outlist <- list(lapply(col_dict[[chosen_selection]], function(x) return(list(label=x, value=x))))
-  
     return(outlist)
   }
 )
@@ -327,30 +282,19 @@ app$callback(
   list(input("radio-selection", "value"),
        input("radio-dependent", "value")),
   function(column, list_) {
-
-    
     p <- scatter_plot_dates(boardgame_data, column, unlist(list_))
-    
-    
     return(p)
-    
   }
 )
 
 # stacked histogram of counts annual published counts
-
 app$callback(
     output = list(id ="counts", property = "figure"),
     list(input("radio-selection", "value"),
          input("radio-dependent", "value")),
     function(column, list_) {
-        
-        
         p2 <- count_plot_dates(boardgame_data, column, unlist(list_))
-        
-        
         return(p2)
-        
     }
 )
 
@@ -360,15 +304,11 @@ app$callback(
 app$callback(
     output = list(id ="facet_1", property = "figure"),
     params=list(input(id="non-linear-range-slider", property="value")),
-        
     function(value) {
-  
     val1 = as.numeric(value[1])
     val2 = as.numeric(value[2])
     p3 <- rank_plot_facet(boardgame_data, val1, val2)
-   
     return(p3)
-        
     }
 )
 
@@ -378,13 +318,11 @@ app$callback(
 app$callback(
     output = list(id ="facet_2", property = "figure"),
     params=list(input(id="non-linear-range-slider2", property="value")),
-    
     function(value){
         val1 = as.numeric(value[1])
         val2 = as.numeric(value[2])
         p4 <- rank_plot_facet(boardgame_data, val1, val2)
         return(p4)
-        
     }
 )
 
@@ -439,56 +377,7 @@ app$callback(
              "category", "mechanic",
              "designer", "publisher",
              "average_rating", "users_rated")]
-    columns <- list(
-      list(
-        name = 'name',
-        id = 'name'
-      ),
-      list(
-        name = 'min_players',
-        id = 'min_players'
-      ),
-      list(
-        name = 'max_players',
-        id = 'max_players'
-      ),
-      list(
-        name = 'min_playtime',
-        id = 'min_playtime'
-      ),
-      list(
-        name = 'max_playtime',
-        id = 'max_playtime'
-      ),
-      list(
-        name = 'year_published',
-        id = 'year_published'
-      ),
-      list(
-        name = 'category',
-        id = 'category'
-      ),
-      list(
-        name = 'mechanic',
-        id = 'mechanic'
-      ),
-      list(
-        name = 'designer',
-        id = 'designer'
-      ),
-      list(
-        name = 'publisher',
-        id = 'publisher'
-      ),
-      list(
-        name = 'average_rating',
-        id = 'average_rating'
-      ),
-      list(
-        name = 'users_rated',
-        id = 'users_rated'
-      )
-    )
+    columns <- col_named_list
     return(list(t, columns))
   }
 )
